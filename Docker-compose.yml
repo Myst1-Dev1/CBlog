@@ -1,0 +1,60 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres-auth
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: corgi_blog_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_auth_data:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"  
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  auth-service:
+    build:
+      context: .
+      dockerfile: ./apps/auth-service/Dockerfile
+    container_name: auth-service
+    restart: always
+    ports:
+      - "4012:4012"
+    depends_on:
+      - postgres
+      - rabbitmq
+    environment:
+      DATABASE_URI: postgresql://postgres:postgres@postgres:5432/corgi_blog_db
+      RABBITMQ_URI: amqp://guest:guest@rabbitmq:5672
+      NODE_ENV: production
+
+  gateway-service:
+    build:
+      context: .
+      dockerfile: ./apps/gateway-service/Dockerfile
+    container_name: gateway-service
+    restart: always
+    ports:
+      - "4011:4011"
+    depends_on:
+      - rabbitmq
+      - auth-service
+    environment:
+      PORT: 4011
+      RABBITMQ_URI: amqp://guest:guest@rabbitmq:5672
+      AUTH_QUEUE: auth_queue
+      NODE_ENV: production
+
+volumes:
+  postgres_auth_data:

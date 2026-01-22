@@ -1,0 +1,13 @@
+# Ignorar dependências locais completamente
+node_modules
+**/node_modules
+
+# Ignorar builds e caches
+dist
+**/dist
+.turbo
+out
+
+# Outros
+.git
+.env
