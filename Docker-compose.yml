@@ -39,6 +39,21 @@ services:
       RABBITMQ_URI: amqp://guest:guest@rabbitmq:5672
       NODE_ENV: production
 
+  media-service:
+    build:
+      context: .
+      dockerfile: ./apps/media-service/Dockerfile
+    container_name: media-service
+    restart: always
+    depends_on:
+      - rabbitmq
+    env_file:
+      - ./apps/media-service/.env
+    environment:
+      RABBITMQ_URI: amqp://guest:guest@rabbitmq:5672
+      MEDIA_QUEUE: media_queue
+      NODE_ENV: production
+
   gateway-service:
     build:
       context: .
