@@ -59,26 +59,36 @@ export class AuthController {
       username: string;
     },
   ) {
-    let avatarUrl = '';
+    
+    try {
+      let avatarUrl = '';
+  
+      if (file) {
+        console.log('Arquivo recebido:', file.originalname);
+        const uploadResult = await firstValueFrom(
+          this.mediaClient.send('media.uploadImage', {
+            base64: file.buffer.toString('base64'),
+            mimeType: file.mimetype,
+            fileName: file.originalname,
+          }),
+        ).catch(err => {
+          console.error('Falha na comunicação com Media Service:', err);
+          throw new BadRequestException('Falha ao processar imagem');
+        });
 
-    if (file) {
-      const uploadResult = await firstValueFrom(
-      this.mediaClient.send('media.uploadImage', {
-        base64: (file.buffer as Buffer).toString('base64'), // Converta aqui
-        mimeType: file.mimetype,
-        fileName: file.originalname,
-      }),
-    );
-
-      avatarUrl = uploadResult.url;
+        avatarUrl = uploadResult.url;
+      }
+  
+      return firstValueFrom(
+        this.authClient.send('auth.registerNewUser', {
+          ...body,
+          avatarUrl,
+        }),
+      );
+      
+    } catch (error) {
+      throw new InternalServerErrorException(`Erro no registerNewUser ${error}`);
     }
-
-    return firstValueFrom(
-      this.authClient.send('auth.registerNewUser', {
-        ...body,
-        avatarUrl,
-      }),
-    );
   }
 
   @Post('login')

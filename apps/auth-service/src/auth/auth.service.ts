@@ -13,6 +13,7 @@ import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dto/loginDto';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
+import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
 export class AuthService {
@@ -35,11 +36,11 @@ export class AuthService {
     const userExists = await this.UsersService.findByEmail(email);
 
     if (!email || !password || !username) {
-      throw new UnauthorizedException('Preencha todos os campos');
+      throw new RpcException('Preencha todos os campos');
     }
 
     if (userExists) {
-      throw new UnauthorizedException('Email já cadastrado');
+      throw new RpcException('Email já cadastrado');
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);

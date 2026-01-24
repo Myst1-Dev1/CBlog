@@ -45,6 +45,8 @@ services:
       dockerfile: ./apps/media-service/Dockerfile
     container_name: media-service
     restart: always
+    ports:
+      - "4013:4013"
     depends_on:
       - rabbitmq
     env_file:
