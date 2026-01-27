@@ -4,13 +4,13 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  process.title = 'posts-service';
+  process.title = 'comments-service';
 
   const logger = new Logger('PostsServiceBootstrap');
 
   const rmqurl = process.env.RABBITMQ_URI ?? 'amqp://guest:guest@rabbitmq:5672';
 
-  const queue = process.env.POSTS_QUEUE ?? 'posts_queue';
+  const queue = process.env.COMMENTS_QUEUE ?? 'comments_queue';
 
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
@@ -30,6 +30,6 @@ async function bootstrap() {
 
   await app.listen();
 
-  logger.log(`Posts RMQ listen on queue ${queue} via ${rmqurl}`);
+  logger.log(`Comments RMQ listen on queue ${queue} via ${rmqurl}`);
 }
 bootstrap();
