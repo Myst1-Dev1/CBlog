@@ -39,6 +39,22 @@ services:
       RABBITMQ_URI: amqp://guest:guest@rabbitmq:5672
       NODE_ENV: production
 
+  posts-service:
+    build:
+      context: .
+      dockerfile: ./apps/posts-service/Dockerfile
+    container_name: posts-service
+    restart: always
+    ports:
+      - "4014:4014"
+    depends_on:
+      - postgres
+      - rabbitmq
+    environment:
+      DATABASE_URI: postgresql://postgres:postgres@postgres:5432/corgi_blog_db
+      RABBITMQ_URI: amqp://guest:guest@rabbitmq:5672
+      NODE_ENV: production
+
   media-service:
     build:
       context: .

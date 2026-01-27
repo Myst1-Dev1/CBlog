@@ -7,6 +7,7 @@ import { JwtStrategy } from 'src/auth/jwt.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { MediaModule } from 'src/media/media.module';
+import { PostsModule } from 'src/posts/posts.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { MediaModule } from 'src/media/media.module';
 
     AuthModule,
     MediaModule,
+    PostsModule,
   ],
   controllers: [GatewayController],
   providers: [GatewayService, JwtStrategy],
