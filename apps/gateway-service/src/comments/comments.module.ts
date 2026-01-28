@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { CommentsController } from './comments.controlle';
+import { CommentsController } from './comments.controller';
 
 @Module({
   imports: [

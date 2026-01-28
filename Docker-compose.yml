@@ -17,7 +17,7 @@ services:
     container_name: rabbitmq
     restart: always
     ports:
-      - "5672:5672"  
+      - "5672:5672"
       - "15672:15672"
     environment:
       RABBITMQ_DEFAULT_USER: guest
@@ -37,6 +37,7 @@ services:
     environment:
       DATABASE_URI: postgresql://postgres:postgres@postgres:5432/corgi_blog_db
       RABBITMQ_URI: amqp://guest:guest@rabbitmq:5672
+      AUTH_QUEUE: auth_queue
       NODE_ENV: production
 
   posts-service:
@@ -53,6 +54,41 @@ services:
     environment:
       DATABASE_URI: postgresql://postgres:postgres@postgres:5432/corgi_blog_db
       RABBITMQ_URI: amqp://guest:guest@rabbitmq:5672
+      POSTS_QUEUE: posts_queue
+      NODE_ENV: production
+
+  comments-service:
+    build:
+      context: .
+      dockerfile: ./apps/comments-service/Dockerfile
+    container_name: comments-service
+    restart: always
+    ports:
+      - "4015:4015"
+    depends_on:
+      - postgres
+      - rabbitmq
+    environment:
+      DATABASE_URI: postgresql://postgres:postgres@postgres:5432/corgi_blog_db
+      RABBITMQ_URI: amqp://guest:guest@rabbitmq:5672
+      COMMENTS_QUEUE: comments_queue
+      NODE_ENV: production
+
+  notifications-service:
+    build:
+      context: .
+      dockerfile: ./apps/notifications-service/Dockerfile
+    container_name: notifications-service
+    restart: always
+    ports:
+      - "4016:4016"
+    depends_on:
+      - postgres
+      - rabbitmq
+    environment:
+      DATABASE_URI: postgresql://postgres:postgres@postgres:5432/corgi_blog_db
+      RABBITMQ_URI: amqp://guest:guest@rabbitmq:5672
+      NOTIFICATIONS_QUEUE: notifications_queue
       NODE_ENV: production
 
   media-service:
@@ -83,10 +119,16 @@ services:
     depends_on:
       - rabbitmq
       - auth-service
+      - posts-service
+      - comments-service
+      - notifications-service
     environment:
       PORT: 4011
       RABBITMQ_URI: amqp://guest:guest@rabbitmq:5672
       AUTH_QUEUE: auth_queue
+      POSTS_QUEUE: posts_queue
+      COMMENTS_QUEUE: comments_queue
+      NOTIFICATIONS_QUEUE: notifications_queue
       NODE_ENV: production
 
 volumes:

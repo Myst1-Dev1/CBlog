@@ -7,9 +7,14 @@ import { CreateCommentDto } from './dto/createCommentDto';
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
-  @MessagePattern('comment.created')
+  @MessagePattern('comments.create')
   create(@Payload() data: CreateCommentDto) {
     return this.commentsService.createComment(data);
+  }
+
+  @MessagePattern('comments.getAll')
+  getAll(@Payload() data: { postId: number }) {
+    return this.commentsService.getAllComments(data.postId);
   }
 
   @MessagePattern('service.ping')

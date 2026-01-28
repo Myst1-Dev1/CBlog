@@ -14,6 +14,9 @@ export class GatewayController {
     @Inject('POSTS_CLIENT') private readonly postsClient: ClientProxy,
 
     @Inject('COMMENTS_CLIENT') private readonly commentsClient: ClientProxy,
+
+    @Inject('NOTIFICATIONS_CLIENT')
+    private readonly notificationsClient: ClientProxy,
   ) {}
 
   @Get('health')
@@ -38,14 +41,15 @@ export class GatewayController {
       }
     };
 
-    const [auth, media, posts, comments] = await Promise.all([
+    const [auth, media, posts, comments, notifications] = await Promise.all([
       ping('auth', this.authClient),
       ping('media', this.mediaClient),
       ping('posts', this.postsClient),
-      ping('comments', this.postsClient),
+      ping('comments', this.commentsClient),
+      ping('notifications', this.notificationsClient),
     ]);
 
-    const ok = [auth, media, posts, comments].every((s) => s.ok);
+    const ok = [auth, media, posts, comments, notifications].every((s) => s.ok);
 
     return {
       ok,
@@ -58,6 +62,7 @@ export class GatewayController {
         media,
         posts,
         comments,
+        notifications,
       },
     };
   }

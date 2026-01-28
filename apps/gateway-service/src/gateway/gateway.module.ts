@@ -8,6 +8,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { MediaModule } from 'src/media/media.module';
 import { PostsModule } from 'src/posts/posts.module';
+import { NotificationsModule } from 'src/notifications/notifications.module';
+import { CommentsModule } from 'src/comments/comments.module';
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { PostsModule } from 'src/posts/posts.module';
     AuthModule,
     MediaModule,
     PostsModule,
+    CommentsModule,
+    NotificationsModule,
   ],
   controllers: [GatewayController],
   providers: [GatewayService, JwtStrategy],
