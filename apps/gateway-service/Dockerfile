@@ -1,4 +1,4 @@
-FROM node:20-alpine AS base
+FROM node:18-alpine AS base
 WORKDIR /app
 
 # PRUNE
@@ -18,13 +18,12 @@ COPY --from=pruner /app/out/full/ ./
 RUN npm run build --workspace=gateway-service
 
 # RUNNER
-FROM node:20-alpine AS runner
+FROM node:18-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
+COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/apps/gateway-service/dist ./dist
 COPY --from=builder /app/apps/gateway-service/package.json ./package.json
-
-RUN npm install --omit=dev
 
 CMD ["node", "dist/main.js"]

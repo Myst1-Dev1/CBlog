@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import {
   WebSocketGateway,
   WebSocketServer,
@@ -19,18 +16,20 @@ export class NotificationsGateway
   server: Server;
 
   handleConnection(client: Socket) {
-    const userId = client.handshake.query.userId;
+    // O query param geralmente vem como string
+    const userId = client.handshake.query.userId as string;
 
     if (userId) {
-      client.join(`user:${userId}`);
-      console.log(`🔔 User ${userId} conectado no WS`);
+      void client.join(`user:${userId}`);
+      console.log(`🔔 Usuário ${userId} conectado (Socket ID: ${client.id})`);
     }
   }
 
   handleDisconnect(client: Socket) {
-    console.log('❌ Cliente desconectado', client);
+    console.log(`❌ Cliente desconectado: ${client.id}`);
   }
 
+  // Se o ID no banco é number, mantemos a tipagem aqui
   emitToUser(userId: number, payload: any) {
     this.server.to(`user:${userId}`).emit('notification', payload);
   }
