@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useActionState } from 'react';
 import { Modal } from '../../Modal';
 import { FaUpload, FaUser } from 'react-icons/fa';
+import { Login } from '../../../actions/signActions';
 
 interface FormModalProps {
     isModalOpen: boolean;
@@ -8,6 +9,8 @@ interface FormModalProps {
 }
 
 export function FormModal({ isModalOpen, setIsModalOpen }:FormModalProps) {
+    const [formState, formAction, pending] = useActionState(Login, { success: false });
+
     const [formType, setFormType] = useState<'signIn' | 'signUp'>('signIn');
 
     return (
@@ -16,7 +19,7 @@ export function FormModal({ isModalOpen, setIsModalOpen }:FormModalProps) {
                 {formType === 'signIn' &&
                 <div className='p-4'>
                     <h2 className='text-xl text-center font-bold'>Faça seu login</h2>
-                    <form action="" className='mt-5 max-w-md w-full grid grid-cols-1 mx-auto gap-3'>
+                    <form action={formAction} className='mt-5 max-w-md w-full grid grid-cols-1 mx-auto gap-3'>
                         <div className='grid grid-cols-1 gap-3'>
                             <label htmlFor="email" className='font-semibold'>Email</label>
                             <input type="email" id='email' name='email' className='input' placeholder='john@gmail.com' />
@@ -25,8 +28,11 @@ export function FormModal({ isModalOpen, setIsModalOpen }:FormModalProps) {
                             <label htmlFor="password" className='font-semibold'>Senha</label>
                             <input type="password" id='password' name='password' className='input' placeholder='********' />
                         </div>
+                        {formState.message}
                         <span className='text-center'>Não possui uma conta? <span onClick={() => setFormType('signUp')} className='font-bold text-orange-400 cursor-pointer'>Cadastro</span></span>
-                        <button className='bg-orange-500 cursor-pointer font-semibold text-xl mt-3 text-white p-3 rounded-md w-full transition-all duration-500 hover:bg-orange-600'>Entrar</button>
+                        <button className='bg-orange-500 cursor-pointer font-semibold text-xl mt-3 text-white p-3 rounded-md w-full transition-all duration-500 hover:bg-orange-600'>
+                            {pending ? 'loading...' : 'Entrar'}
+                        </button>
                     </form>
                 </div>
                 }
