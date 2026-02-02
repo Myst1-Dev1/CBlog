@@ -2,12 +2,15 @@
 import Link from "next/link";
 import { FaSearch, FaBars, FaTimes } from "react-icons/fa";
 import { useState } from "react";
+import { FormModal } from "./FormModal";
 
 export function Header() {
     const [open, setOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     return (
-        <header className="z-50 flex justify-between items-center container py-6 absolute top-0 left-0 right-0 text-white">
+        <>
+        <header className="z-30 flex justify-between items-center container py-6 absolute top-0 left-0 right-0 text-white">
             <h1 className="text-2xl font-bold">Corgi Blog</h1>
 
             <nav className="hidden md:flex items-center gap-6">
@@ -27,8 +30,8 @@ export function Header() {
             </div>
 
             <div className="hidden md:flex items-center gap-4">
-                <span className="p-3 font-semibold transition-all duration-500 rounded-md cursor-pointer hover:bg-orange-500">Login</span>
-                <button className="bg-white w-fit p-3 rounded-md font-semibold cursor-pointer transition-all text-black duration-500 hover:bg-orange-500 hover:text-white">Cadastro</button>
+                <span onClick={() => setIsModalOpen(true)} className="p-3 font-semibold transition-all duration-500 rounded-md cursor-pointer hover:bg-orange-500">Login</span>
+                <button onClick={() => setIsModalOpen(true)} className="bg-white w-fit p-3 rounded-md font-semibold cursor-pointer transition-all text-black duration-500 hover:bg-orange-500 hover:text-white">Cadastro</button>
             </div>
 
             <button className="md:hidden text-2xl" onClick={() => setOpen(!open)}>
@@ -67,13 +70,15 @@ export function Header() {
                     </div>
 
                     <div className="flex flex-col gap-4">
-                        <span className="p-3 font-semibold text-center transition-all duration-300 rounded-md cursor-pointer hover:bg-orange-500">Login</span>
-                        <button className="bg-white w-full py-3 rounded-md font-semibold cursor-pointer transition-all text-black duration-300 hover:bg-orange-500 hover:text-white">
+                        <span onClick={() =>  {setIsModalOpen(true); setOpen(false)}} className="p-3 font-semibold text-center transition-all duration-300 rounded-md cursor-pointer hover:bg-orange-500">Login</span>
+                        <button onClick={() =>  {setIsModalOpen(true); setOpen(false)}} className="bg-white w-full py-3 rounded-md font-semibold cursor-pointer transition-all text-black duration-300 hover:bg-orange-500 hover:text-white">
                             Cadastro
                         </button>
                     </div>
                 </div>
             </div>
         </header>
+        <FormModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+        </>
     );
 }
