@@ -36,6 +36,7 @@ export class PostsService {
           'category',
           'description',
           'postImageUrl',
+          'createdAt'
         ],
       });
     } catch (error) {

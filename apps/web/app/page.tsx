@@ -1,8 +1,11 @@
+'use server';
+
 import { Intro } from "../components/home/Intro";
 import { Pagination } from "../components/home/pagination";
 import { Posts } from "../components/home/posts";
 
-export default function Home() {
+export default async function Home() {
+
   return (
     <>
       <Intro />

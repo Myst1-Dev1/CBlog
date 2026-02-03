@@ -132,10 +132,10 @@ export class PostsController {
     return await firstValueFrom(this.postsClient.send('posts.findAll', {}));
   }
 
-  @Get('/:id')
-  async getPostById(@Param('id') id: string) {
-    return await firstValueFrom(
-      this.postsClient.send('posts.findById', Number(id)),
-    );
+  @Get(':id')
+  getPostById(@Param('id') id: string) {
+    return this.postsClient.send('posts.findById', {
+      id: Number(id),
+    });
   }
 }

@@ -18,6 +18,8 @@ export class CommentsService {
       throw new RpcException('A postagem não foi encontrada');
     }
 
+    console.log('EVENT BUS:', this.eventClient);
+
     const comment = await this.commentsRepository.save(data);
 
     this.eventClient.emit('comment.created', {

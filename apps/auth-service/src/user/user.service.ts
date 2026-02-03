@@ -22,7 +22,7 @@ export class UserService {
 
   findAll() {
     return this.repo.find({
-      select: ['id', 'email', 'username'],
+      select: ['id', 'avatarUrl', 'email', 'username'],
     });
   }
 

@@ -1,19 +1,26 @@
-import { PostIntro } from '../../../components/post/postIntro'
+export const dynamic = 'force-dynamic';
+import { PostIntro } from '../../../components/post'
 import Image from "next/image";
 import Link from "next/link";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { Comments } from '../../../components/post/Comments';
+import { fetchPostById } from '../../../hooks/fetchPostById';
 
-export default function Post() {
+export default async function Post({ params }:any) {
+    const { id } = await params;
+
+    const data = await fetchPostById(Number(id));
+
     return (
         <>
-           <PostIntro />
+           <PostIntro title={data?.title} category={data?.category} postImageUrl={data?.postImageUrl} />
            <div className="container py-8">
-                <p className="font-normal text-lg leading-7 text-gray-500">
-                    Os Corgis conquistaram o coração do mundo com suas patinhas curtas, orelhas grandes e um carisma inconfundível. Mas, além da fofura que faz sucesso nas redes sociais, essa raça também guarda muitas curiosidades e características únicas que todo tutor — ou futuro tutor — deveria conhecer. Neste post, vamos explorar a origem histórica dos Corgis, sua ligação com a realeza britânica, os cuidados essenciais para manter a saúde e o bem-estar desses companheiros tão especiais, além de dicas práticas sobre alimentação, comportamento e exercícios ideais. Se você é apaixonado por cães ou está pensando em adotar um Corgi, aqui vai encontrar informações completas, curiosidades divertidas e insights que vão te ajudar a entender melhor o universo desses peludinhos encantadores.
-                </p>
+                <div
+                    className="text-gray-500 font-thin line-clamp-2 text-sm"
+                    dangerouslySetInnerHTML={{ __html: data?.description }}
+                />
            </div>
-           <div className="py-8 container flex flex-col lg:flex-row items-center gap-5">
+           {/* <div className="py-8 container flex flex-col lg:flex-row items-center gap-5">
                 <Image className="w-16 h-16 rounded-full m-auto object-cover" src="/images/user.jpg" width={400} height={400} alt="foto do autor do post" />
                 <div>
                     <h2 className="text-xl font-bold mb-3">Jane Doe</h2>
@@ -21,8 +28,8 @@ export default function Post() {
                         Com anos de experiência estudando e convivendo com Corgis, Jane Doe reúne conhecimento e carinho pela raça em seus artigos. Seu objetivo é informar, inspirar e aproximar ainda mais os apaixonados por esses peludos.
                     </p>
                 </div>
-           </div>
-           <Comments />
+           </div> */}
+           <Comments data = {data} />
            <div className="py-8 container">
                 <h2 className="text-2xl mb-5 font-bold">Continue Lendo</h2>
                 <div className="grid gap-8 grid-cols-1 lg:grid-cols-4">

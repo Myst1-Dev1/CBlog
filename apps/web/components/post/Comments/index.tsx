@@ -1,21 +1,50 @@
-import Image from "next/image";
+'use client';
 
-export function Comments() {
+import Image from "next/image";
+import { createComment } from "../../../actions/postsActions";
+import { useActionState } from "react";
+import { Loading } from "../../Loading";
+import { useUserStore } from "../../../hooks/user/useUserStore";
+
+interface CommentsProps {
+    data: any;
+}
+
+export function Comments({ data }:CommentsProps) {
+    const { user } = useUserStore();
+
+    const [formState, formAction, pending] = useActionState(handleCreateComment, { success: false });
+
+    async function handleCreateComment(prevState: any, formData: FormData) {
+        const result = await createComment(prevState, formData);
+
+        if (result?.message) {
+            if (result.success) {
+                alert(result.message);
+            }
+        }
+
+        return result;
+    }
+
     return (
         <div className="container">
             <div className="py-16">
                 <h3 className="text-xl font-bold">Faça um comentário</h3>
-                <div className="bg-gray-100 rounded-xl w-full p-4 mt-5 flex flex-col lg:flex-row gap-4 items-start lg:items-center shadow-sm">
+                <form action={formAction} className="rounded-xl w-full p-4 mt-5 flex flex-col lg:flex-row gap-4 items-start lg:items-center shadow-sm">
                     <div className="flex items-start gap-3 flex-1 w-full">
                         <Image
-                        src="/images/user.jpg"
+                        src={user?.avatarUrl || "/images/user.jpg"}
                         className="w-10 h-10 object-cover m-auto rounded-full"
                         width={40}
                         height={40}
                         alt="foto do usuário"
                         />
-
+                        <input type="hidden" name="authorId" value={user?.id} />
+                        <input type="hidden" name="postId" value={data.id} />
+                        <input type="text" value={user?.username} className="hidden" name="name" />
                         <textarea
+                        name="content"
                         placeholder="Gostei do post..."
                         className="
                             w-full
@@ -28,10 +57,15 @@ export function Comments() {
                             outline-none
                         "
                         />
+                        {formState.message !== '' ?
+                            <p className={`${formState.success === false ? 'text-red-600' : 'text-green-600'} font-bold mx-auto`}>{formState.message}</p>
+                            : ''
+                        }
                     </div>
 
                     <button
                         className="
+                        cursor-pointer
                         bg-orange-500
                         text-white
                         font-semibold
@@ -46,9 +80,9 @@ export function Comments() {
                         active:scale-95
                         "
                     >
-                        Enviar
+                        {pending ? <Loading /> : 'Enviar'}
                     </button>
-                </div>
+                </form>
             </div>
             <h2 className="font-medium">Comentários</h2>
             <div className="py-8 grid grid-cols-1 lg:grid-cols-2 gap-4">
