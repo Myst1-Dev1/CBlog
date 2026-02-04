@@ -14,16 +14,17 @@ export class CommentsService {
   ) {}
 
   async createComment(data: CreateCommentDto): Promise<Comments> {
-    if (!data.postId) {
-      throw new RpcException('A postagem não foi encontrada');
-    }
-
-    console.log('EVENT BUS:', this.eventClient);
-
-    const comment = await this.commentsRepository.save(data);
+    const comment = await this.commentsRepository.save({
+      postId: data.postId,
+      postAuthorId: data.postAuthorId,
+      authorId: data.authorId,
+      name: data.name,
+      content: data.content,
+    });
 
     this.eventClient.emit('comment.created', {
-      postAuthorId: data.authorId,
+      targetUserId: data.postAuthorId,
+      commenterId: data.authorId,
       commenterName: data.name,
       postId: data.postId,
       commentId: comment.id,

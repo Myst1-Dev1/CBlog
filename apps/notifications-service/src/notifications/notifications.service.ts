@@ -1,14 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Notifications } from './entities/notifications.entity';
 import { Repository } from 'typeorm';
+import { Notifications } from './entities/notifications.entity';
 import { CreateNotificationDto } from './dto/createNotificationDto';
+import { NotificationsGateway } from './notifications.gateway';
 
 @Injectable()
 export class NotificationsService {
   constructor(
     @InjectRepository(Notifications)
     private readonly notificationRepo: Repository<Notifications>,
+
+    private readonly notificationsGateway: NotificationsGateway,
   ) {}
 
   async create(data: CreateNotificationDto): Promise<Notifications> {
@@ -17,7 +20,12 @@ export class NotificationsService {
       read: false,
     });
 
-    return this.notificationRepo.save(notification);
+    const saved = await this.notificationRepo.save(notification);
+
+    // 🔥 AQUI ESTAVA O PROBLEMA
+    this.notificationsGateway.emitToUser(data.userId, saved);
+
+    return saved;
   }
 
   async markAsRead(id: number) {
@@ -30,12 +38,18 @@ export class NotificationsService {
       order: { createdAt: 'DESC' },
     });
   }
-
+  
   ping() {
     return {
       ok: true,
       service: 'notifications',
       now: new Date().toISOString(),
     };
+  }
+
+  hello() {
+    return {
+      message: 'Hello from notifications service'
+    }
   }
 }

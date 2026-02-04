@@ -75,16 +75,21 @@ export async function createComment(
 
     const data = JSON.parse(cookie);
 
-    const authorId = Number(formData.get('authorId'));
     const postId = Number(formData.get('postId'));
+    const authorId = Number(formData.get('authorId'));
     const name = formData.get('name')?.toString();
     const content = formData.get('content')?.toString();
 
-    if (!authorId || !postId || !content) {
+    if (!postId || !authorId || !content) {
       return { success: false, message: "Dados inválidos" };
     }
 
-    console.log(data);
+    console.log({
+      postId,
+      authorId,
+      name,
+      content,
+    });
 
     const res = await fetch(`${API_URL}comments`, {
       method: 'POST',
@@ -93,8 +98,8 @@ export async function createComment(
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        authorId,
         postId,
+        authorId,
         name,
         content,
       }),

@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { NotificationsController } from './notifications.controller';
-import { NotificationsGateway } from './notifications.gateway';
-import { NotificationsEventsController } from './notifications-events.controller';
 
 @Module({
   imports: [
@@ -18,21 +16,9 @@ import { NotificationsEventsController } from './notifications-events.controller
           queueOptions: { durable: false },
         },
       },
-      {
-        name: 'GATEWAY_EVENTS',
-        transport: Transport.RMQ,
-        options: {
-          urls: [
-            process.env.RABBITMQ_URI ?? 'amqp://guest:guest@rabbitmq:5672',
-          ],
-          queue: 'gateway_events_queue',
-          queueOptions: { durable: false },
-        },
-      },
     ]),
   ],
-  controllers: [NotificationsController, NotificationsEventsController],
-  providers: [NotificationsGateway],
+  controllers: [NotificationsController],
   exports: [ClientsModule],
 })
 export class NotificationsModule {}

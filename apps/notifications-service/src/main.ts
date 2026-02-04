@@ -1,35 +1,29 @@
 import { Logger } from '@nestjs/common';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
-  process.title = 'notifications-service';
+  const logger = new Logger('NotificationsBootstrap');
 
-  const logger = new Logger('PostsServiceBootstrap');
+  const app = await NestFactory.create(AppModule);
 
-  const rmqurl = process.env.RABBITMQ_URI ?? 'amqp://guest:guest@rabbitmq:5672';
+  app.enableCors({ origin: '*' });
 
-  const queue = process.env.NOTIFICATIONS_QUEUE ?? 'notifications_queue';
-
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-    AppModule,
-    {
-      transport: Transport.RMQ,
-      options: {
-        urls: [rmqurl],
-        queue,
-        queueOptions: {
-          durable: false,
-        },
-      },
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.RMQ,
+    options: {
+      urls: [
+        process.env.RABBITMQ_URI || 'amqp://guest:guest@rabbitmq:5672',
+      ],
+      queue: process.env.NOTIFICATIONS_QUEUE || 'notifications_queue',
+      queueOptions: { durable: false },
     },
-  );
+  });
 
-  app.enableShutdownHooks();
+  await app.startAllMicroservices();
+  await app.listen(4016);
 
-  await app.listen();
-
-  logger.log(`Notifications RMQ listen on queue ${queue} via ${rmqurl}`);
+  logger.log('🔔 Notifications HTTP + WS on :4016');
 }
 bootstrap();

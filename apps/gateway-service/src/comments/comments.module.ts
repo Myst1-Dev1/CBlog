@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { CommentsController } from './comments.controller';
+import { PostsModule } from 'src/posts/posts.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { CommentsController } from './comments.controller';
         },
       },
     ]),
+    PostsModule,
   ],
   controllers: [CommentsController],
   exports: [ClientsModule],

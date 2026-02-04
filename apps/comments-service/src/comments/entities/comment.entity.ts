@@ -14,6 +14,9 @@ export class Comments {
   postId: number;
 
   @Column()
+  postAuthorId: number;
+
+  @Column()
   authorId: number;
 
   @Column()

@@ -16,7 +16,6 @@ export class NotificationsGateway
   server: Server;
 
   handleConnection(client: Socket) {
-    // O query param geralmente vem como string
     const userId = client.handshake.query.userId as string;
 
     if (userId) {
@@ -29,7 +28,6 @@ export class NotificationsGateway
     console.log(`❌ Cliente desconectado: ${client.id}`);
   }
 
-  // Se o ID no banco é number, mantemos a tipagem aqui
   emitToUser(userId: number, payload: any) {
     this.server.to(`user:${userId}`).emit('notification', payload);
   }

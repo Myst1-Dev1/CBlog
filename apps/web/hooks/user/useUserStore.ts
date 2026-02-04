@@ -8,6 +8,7 @@ export type User = {
   email: string;
   username: string;
   avatarUrl: string;
+  token: string;
 };
 
 type UserState = {
@@ -44,9 +45,8 @@ export const useUserStore = create<UserState>((set) => ({
         headers: {
           Authorization: `Bearer ${parsedUser.token}`,
         },
-        cache: 'no-store',
         next: {
-          tags: ['user']
+          tags: ['user', parsedUser.id]
         }
       });
 
@@ -74,9 +74,6 @@ export const useUserStore = create<UserState>((set) => ({
       const res = await fetch(`${API_URL}auth/users`, {
         method: 'GET',
         cache: 'no-store',
-        next: {
-          tags: ['users']
-        }
       });
 
       if (!res.ok) {

@@ -18,7 +18,7 @@ export function Header() {
     return (
         <>
         <header className={`z-30 flex justify-between items-center container py-6 absolute top-0 left-0 right-0 ${path === '/' || path.startsWith('/post') ? 'text-white' : 'text-black'}`}>
-            <h1 className="text-2xl font-bold">Corgi Blog</h1>
+            <Link href="/" className="text-2xl font-bold">Corgi Blog</Link>
 
             <nav className="hidden md:flex items-center gap-6">
                 <Link href="/alimentacao" className="font-semibold text-[15px] transition-all duration-300 hover:text-orange-500">Alimentação</Link>

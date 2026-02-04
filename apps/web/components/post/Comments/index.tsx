@@ -40,8 +40,8 @@ export function Comments({ data }:CommentsProps) {
                         height={40}
                         alt="foto do usuário"
                         />
-                        <input type="hidden" name="authorId" value={user?.id} />
                         <input type="hidden" name="postId" value={data.id} />
+                        <input type="hidden" name="authorId" value={user?.id} />
                         <input type="text" value={user?.username} className="hidden" name="name" />
                         <textarea
                         name="content"

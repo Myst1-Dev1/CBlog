@@ -20,7 +20,7 @@ export function useNotifications(userId?: number) {
 
     if (socketRef.current) return; // evita reconectar
 
-    const socket = io('http://localhost:4011', {
+    const socket = io('http://localhost:4016', {
       query: { userId },
     });
 

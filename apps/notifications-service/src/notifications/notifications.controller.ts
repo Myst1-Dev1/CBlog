@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
 import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 
@@ -10,22 +10,27 @@ export class NotificationsController {
   async onCommentCreated(
     @Payload()
     data: {
-      postAuthorId: number;
+      targetUserId: number;
+      commenterId: number;
       commenterName: string;
       postId: number;
       commentId: number;
     },
   ) {
+    console.log('📨 EVENTO RECEBIDO:', data);
+
     return this.notificationsService.create({
-      userId: data.postAuthorId,
+      userId: data.targetUserId,
       type: 'COMMENT',
       message: `${data.commenterName} comentou no seu post`,
       metadata: {
         postId: data.postId,
         commentId: data.commentId,
+        commenterId: data.commenterId,
       },
     });
   }
+
 
   @MessagePattern('notifications.findByUser')
   findByUser(userId: number) {
@@ -40,5 +45,10 @@ export class NotificationsController {
   @MessagePattern('service.ping')
   ping() {
     return this.notificationsService.ping();
+  }
+
+  @Get()
+  hello() {
+    return this.notificationsService.hello();
   }
 }
