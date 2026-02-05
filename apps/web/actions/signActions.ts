@@ -1,6 +1,6 @@
 'use server'
 
-import { revalidateTag } from 'next/cache';
+import { revalidatePath } from 'next/cache';
 import { ActionResult } from '../@types/ActionResult'
 import { cookies } from "next/headers";
 
@@ -17,7 +17,6 @@ export async function Login(_:ActionResult, formData: FormData): Promise<ActionR
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
-            cache: 'no-store'
         });
 
         if (!res.ok) {
@@ -35,7 +34,7 @@ export async function Login(_:ActionResult, formData: FormData): Promise<ActionR
             maxAge: 60 * 60 * 24 * 1
         });
 
-        revalidateTag('user', 'max');
+        revalidatePath('/', 'page');
 
         return { success: true, message:'Login feito com sucesso' }
     } catch (error:any) {

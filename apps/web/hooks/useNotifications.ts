@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { toast } from 'react-toastify';
 import { io, Socket } from 'socket.io-client';
 
 type NotificationPayload = {
@@ -18,7 +19,7 @@ export function useNotifications(userId?: number) {
   useEffect(() => {
     if (!userId) return;
 
-    if (socketRef.current) return; // evita reconectar
+    if (socketRef.current) return;
 
     const socket = io('http://localhost:4016', {
       query: { userId },
@@ -31,15 +32,7 @@ export function useNotifications(userId?: number) {
     });
 
     socket.on('notification', (data: NotificationPayload) => {
-      console.log('🔔 Nova notificação:', data);
-
-      // ALERTA (temporário)
-      alert(data.message);
-
-      // depois:
-      // toast(data.message)
-      // notificationsStore.add(data)
-      // playSound()
+      toast.success(data.message);
     });
 
     socket.on('disconnect', () => {

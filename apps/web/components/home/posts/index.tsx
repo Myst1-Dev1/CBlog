@@ -1,16 +1,18 @@
-'use client';
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Image from "next/image";
 import Link from "next/link";
 import { FaArrowRightLong } from "react-icons/fa6";
-import { usePostStore } from "../../../hooks/posts/usePostStore";
 import { useUserStore } from "../../../hooks/user/useUserStore";
+import { Post } from "../../../@types/Post";
 
-export function Posts() {
-    const { post } = usePostStore();
+interface PostsProps {
+    data: Post[] | any;
+}
+
+export function Posts({ data }:PostsProps) {
     const { users } = useUserStore();
 
-    const authorIds = new Set(post?.map(p => p.authorId));
+    const authorIds = new Set(data?.map((p:any) => p.authorId));
 
     const authors = users?.filter(user =>
         authorIds.has(user.id)
@@ -19,7 +21,7 @@ export function Posts() {
     return (
         <>
             <div className="pt-6 grid grid-cols-1 lg:grid-cols-3 gap-5">
-                {post?.map(data => {
+                {data?.map((data: any) => {
                     const author = authors?.find(
                         (author) => author.id === data.authorId
                     );
@@ -34,7 +36,13 @@ export function Posts() {
                                 alt="foto do post"
                             />
 
-                            <span className="text-gray-500 text-xs">30 de Janeiro, 2025</span>
+                            <span className="text-gray-500 text-xs">
+                                {new Date(data.createdAt).toLocaleDateString('pt-BR', {
+                                    day: 'numeric',
+                                    month: 'long',
+                                    year: 'numeric',
+                                })}
+                            </span>
 
                             <h3 className="text-xl lg:text-2xl font-semibold">
                                 {data.title}

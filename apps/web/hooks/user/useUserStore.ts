@@ -46,7 +46,7 @@ export const useUserStore = create<UserState>((set) => ({
           Authorization: `Bearer ${parsedUser.token}`,
         },
         next: {
-          tags: ['user', parsedUser.id]
+          tags: ['user']
         }
       });
 

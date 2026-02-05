@@ -2,14 +2,15 @@
 
 import Image from "next/image";
 import { useUserStore } from "../../hooks/user/useUserStore";
-import Link from "next/link";
-import { FaArrowRightLong } from "react-icons/fa6";
 import { useState } from "react";
 import { NewPostModal } from "./newPostModal";
 import { usePostStore } from "../../hooks/posts/usePostStore";
+import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
+import { deletePost } from "../../actions/postsActions";
+import { toast } from "react-toastify";
 
 export function ProfileContent() {
-    const { user, users } = useUserStore();
+    const { user } = useUserStore();
     const { post } = usePostStore();
 
     const [isNewPostModalOpen, setIsNewPostModalOpen] = useState(false);
@@ -20,7 +21,14 @@ export function ProfileContent() {
         (data) => data.authorId === user.id
     );
 
-    console.log('usuarios', users);
+    async function handleDeletePost(id: number) {
+        try {
+            await deletePost(id);
+            toast.success('Post deletado com sucesso');
+        } catch (error: any) {
+            toast.error('Erro ao deletar o post', error);
+        }
+    }
 
     return (
         <>
@@ -41,15 +49,18 @@ export function ProfileContent() {
                             <div key={post.id} className="max-w-96 w-full relative">
                                 <Image className="w-full h-52 mb-2 rounded-md object-cover" src={post.postImageUrl || "/images/corgi.webp"} width={400} height={400} alt="foto do post" />
                                 <span className="text-gray-500 text-xs">30 de Janeiro, 2025</span>
-                                <h3 className="text-xl lg:text-2xl font-semibold">{post.title}</h3>
+                                <h3 className="text-xl lg:text-2xl font-semibold line-clamp-2">{post.title}</h3>
                                 <div
                                     className="text-gray-500 font-thin line-clamp-2 text-sm"
                                     dangerouslySetInnerHTML={{ __html: post.description }}
                                 />
-                                <Link href={`post/` + post.id} className="flex items-center mt-2 gap-3 font-semibold w-fit p-2 transition-all duration-500 hover:bg-orange-400 hover:text-white">Ver Mais <FaArrowRightLong /></Link>
-                                <div className="mt-5 flex items-center gap-3">
-                                    <Image className="w-8 h-8 rounded-full object-cover" src={user?.avatarUrl || "/images/user.jpg"} width={32} height={32} alt="foto do usuário que fez a postagem" />
-                                    <span className="font-medium">{user?.username}</span>
+                                <div className="flex gap-8 absolute right-1 -top-2">
+                                    <div className="w-7 h-7 grid place-items-center bg-green-500 rounded-md cursor-pointer text-white transition-all duration-500 hover:brightness-90">
+                                        <FaPencilAlt />
+                                    </div>
+                                    <div className="w-7 h-7 grid place-items-center bg-red-500 rounded-md cursor-pointer text-white transition-all duration-500 hover:brightness-90">
+                                        <FaTrashAlt onClick={() => handleDeletePost(post.id)} />
+                                    </div>
                                 </div>
                                 <span className="text-white p-2 text-sm absolute top-3 left-3 w-fit bg-black/60 rounded-full">{post.category}</span>
                             </div>

@@ -3,6 +3,7 @@ import { FaUpload, FaUser } from "react-icons/fa";
 import { Register } from '../../../../actions/signActions';
 import Image from 'next/image';
 import { Loading } from '../../../Loading';
+import { toast } from 'react-toastify';
 
 interface SignUpProps {
     setFormType: React.Dispatch<React.SetStateAction<"signIn" | "signUp">>;
@@ -18,9 +19,11 @@ export function SignUp({ setFormType, setIsModalOpen }:SignUpProps) {
     
             if (result?.message) {
                 if (result.success) {
-                    alert(result.message);
+                    toast.success(result.message);
                     setIsModalOpen(false);
                     setFile(null);
+                } else {
+                    toast.error(result.message)
                 }
             }
     

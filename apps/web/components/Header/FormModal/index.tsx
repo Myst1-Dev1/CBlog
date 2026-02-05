@@ -3,6 +3,7 @@ import { Modal } from '../../Modal';
 import { Login } from '../../../actions/signActions';
 import { SignUp } from './SignUp';
 import { Loading } from '../../Loading';
+import { toast } from 'react-toastify';
 
 interface FormModalProps {
     isModalOpen: boolean;
@@ -19,8 +20,11 @@ export function FormModal({ isModalOpen, setIsModalOpen, formType, setFormType }
 
         if (result?.message) {
             if (result.success) {
-                alert(result.message);
+                toast.success(result.message);
                 setIsModalOpen(false);
+
+            } else {
+                toast.error(result.message);
             }
         }
 

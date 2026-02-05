@@ -1,4 +1,5 @@
 "use client";
+
 import Link from "next/link";
 import { FaSearch, FaBars, FaTimes, FaUserCircle, FaSignOutAlt } from "react-icons/fa";
 import { useState } from "react";
@@ -6,14 +7,18 @@ import { FormModal } from "./FormModal";
 import { useUserStore } from "../../hooks/user/useUserStore";
 import { usePathname } from "next/navigation";
 
+import Cookies from 'js-cookie';
+
 export function Header() {
-    const {user, clearUser } = useUserStore();
+    const {user, clearUser, loading } = useUserStore();
 
     const path = usePathname();
 
     const [open, setOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [formType, setFormType] = useState<'signIn' | 'signUp'>('signIn');
+
+    const isLogged = Cookies.get('user');
 
     return (
         <>
@@ -24,7 +29,6 @@ export function Header() {
                 <Link href="/alimentacao" className="font-semibold text-[15px] transition-all duration-300 hover:text-orange-500">Alimentação</Link>
                 <Link href="/treinamento" className="font-semibold text-[15px] transition-all duration-300 hover:text-orange-500">Treinamento</Link>
                 <Link href="/saude" className="font-semibold text-[15px] transition-all duration-300 hover:text-orange-500">Saúde</Link>
-                <Link href="/curiosidades" className="font-semibold text-[15px] transition-all duration-300 hover:text-orange-500">Curiosidades</Link>
             </nav>
 
             <div className="max-w-72 w-full p-2 rounded-md bg-[#ffffff56] hidden md:flex items-center gap-3">
@@ -36,12 +40,12 @@ export function Header() {
                 <FaSearch className="text-white" />
             </div>
 
-            {user ? 
+            {isLogged ? loading ? 'Carregando...' :
             <div className="hidden md:flex items-center gap-5 relative">
                 <Link href="/profile">
                     <FaUserCircle className="text-3xl cursor-pointer" />
                 </Link>
-                <FaSignOutAlt onClick={clearUser} className="cursor-pointer" />
+                <FaSignOutAlt onClick={clearUser} className="cursor-pointer transition-all duration-500 hover:text-orange-400" />
             </div>
             :
             <div className="hidden md:flex items-center gap-4">
@@ -80,7 +84,6 @@ export function Header() {
                         <Link href="/" onClick={() => setOpen(false)} className="font-semibold text-lg transition-all duration-300 hover:text-orange-500">Alimentação</Link>
                         <Link href="/" onClick={() => setOpen(false)} className="font-semibold text-lg transition-all duration-300 hover:text-orange-500">Treinamento</Link>
                         <Link href="/" onClick={() => setOpen(false)} className="font-semibold text-lg transition-all duration-300 hover:text-orange-500">Saúde</Link>
-                        <Link href="/" onClick={() => setOpen(false)} className="font-semibold text-lg transition-all duration-300 hover:text-orange-500">Curiosidades</Link>
                     </nav>
 
                     <div className="w-full p-2 rounded-md bg-[#ffffff56] flex items-center gap-3">

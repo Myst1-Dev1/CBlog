@@ -1,6 +1,7 @@
 'use server';
 
-import { ActionResult } from "next/dist/shared/lib/app-router-types";
+import { revalidatePath } from "next/cache";
+import { ActionResult } from "../@types/ActionResult";
 import { cookies } from "next/headers";
 
 const API_URL = 'http://localhost:4011/'
@@ -45,7 +46,6 @@ export async function createNewPost(
         Authorization: `Bearer ${data.token}`,
       },
       body,
-      cache: "no-store",
     });
 
     if (!res.ok) {
@@ -53,6 +53,8 @@ export async function createNewPost(
       console.error(error);
       return { success: false, message: "Erro ao criar postagem" };
     }
+
+    revalidatePath('/profile');
 
     return { success: true, message: "Post criado com sucesso!" };
   } catch (error) {
@@ -116,5 +118,35 @@ export async function createComment(
   } catch (error) {
     console.error(error);
     return { success: false, message: "Falha ao criar novo comentário" };
+  }
+}
+
+export async function deletePost(id: number) {
+  try {
+    const cookieStore = await cookies();
+    const cookie = cookieStore.get("user")?.value;
+
+    if (!cookie) {
+      return { success: false, message: "Usuário não autenticado" };
+    }
+
+    const data = JSON.parse(cookie);
+
+    if (!data.token) {
+      return { success: false, message: "Token de autenticação não encontrado." };
+    }
+    
+    await fetch(`${API_URL}posts/` + id, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${data.token}`,
+      }
+    });
+
+    revalidatePath('profile');
+
+    console.log('Post deletado com sucesso !');
+  } catch (error) {
+    console.log('Tivemos um erro ao deletar o post !', error);
   }
 }
