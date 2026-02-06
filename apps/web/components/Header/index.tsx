@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FaSearch, FaBars, FaTimes, FaUserCircle, FaSignOutAlt } from "react-icons/fa";
+import { FaBars, FaTimes, FaUserCircle, FaSignOutAlt } from "react-icons/fa";
 import { useState } from "react";
 import { FormModal } from "./FormModal";
 import { useUserStore } from "../../hooks/user/useUserStore";
@@ -31,18 +31,18 @@ export function Header() {
                 <Link href="/saude" className="font-semibold text-[15px] transition-all duration-300 hover:text-orange-500">Saúde</Link>
             </nav>
 
-            <div className="max-w-72 w-full p-2 rounded-md bg-[#ffffff56] hidden md:flex items-center gap-3">
+            {/* <div className="max-w-72 w-full p-2 rounded-md bg-[#ffffff56] hidden md:flex items-center gap-3">
                 <input
                     type="text"
                     className="w-full border-none outline-none font-semibold bg-transparent placeholder-white"
                     placeholder="Pesquisar..."
                 />
                 <FaSearch className="text-white" />
-            </div>
+            </div> */}
 
             {isLogged ? loading ? 'Carregando...' :
             <div className="hidden md:flex items-center gap-5 relative">
-                <Link href="/profile">
+                <Link href="/perfil">
                     <FaUserCircle className="text-3xl cursor-pointer" />
                 </Link>
                 <FaSignOutAlt onClick={clearUser} className="cursor-pointer transition-all duration-500 hover:text-orange-400" />
@@ -86,22 +86,22 @@ export function Header() {
                         <Link href="/" onClick={() => setOpen(false)} className="font-semibold text-lg transition-all duration-300 hover:text-orange-500">Saúde</Link>
                     </nav>
 
-                    <div className="w-full p-2 rounded-md bg-[#ffffff56] flex items-center gap-3">
+                    {/* <div className="w-full p-2 rounded-md bg-[#ffffff56] flex items-center gap-3">
                         <input
                             type="text"
                             className="w-full border-none outline-none font-semibold bg-transparent placeholder-white"
                             placeholder="Pesquisar..."
                         />
                         <FaSearch className="text-white" />
-                    </div>
+                    </div> */}
 
                     <div className="flex flex-col gap-4">
                         {user ? 
                             <button className="border border-white w-full py-3 rounded-md font-semibold cursor-pointer transition-all text-white duration-300 hover:bg-orange-500 hover:text-orange-400">Sair</button>
                         :
                         <>
-                            <span onClick={() =>  {setIsModalOpen(true); setOpen(false)}} className="p-3 font-semibold text-center transition-all duration-300 rounded-md cursor-pointer hover:bg-orange-500">Login</span>
-                            <button onClick={() =>  {setIsModalOpen(true); setOpen(false)}} className="bg-white w-full py-3 rounded-md font-semibold cursor-pointer transition-all text-black duration-300 hover:bg-orange-500 hover:text-white">
+                            <span onClick={() =>  {setIsModalOpen(true); setOpen(false); setFormType('signIn')}} className="p-3 font-semibold text-center transition-all duration-300 rounded-md cursor-pointer hover:bg-orange-500">Login</span>
+                            <button onClick={() =>  {setIsModalOpen(true); setOpen(false); setFormType('signUp')}} className="bg-white w-full py-3 rounded-md font-semibold cursor-pointer transition-all text-black duration-300 hover:bg-orange-500 hover:text-white">
                                 Cadastro
                             </button>
                         </>

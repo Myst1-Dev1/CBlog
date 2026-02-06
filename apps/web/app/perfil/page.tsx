@@ -1,6 +1,6 @@
 import { ProfileContent } from "../../components/profileContent";
 
-export default function Profile() {
+export default function Perfil() {
 
     return (
         <>

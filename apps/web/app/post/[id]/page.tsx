@@ -1,9 +1,6 @@
 'use server';
 
 import { PostIntro } from '../../../components/post'
-import Image from "next/image";
-import Link from "next/link";
-import { FaArrowRightLong } from "react-icons/fa6";
 import { Comments } from '../../../components/post/Comments';
 import { fetchPostById } from '../../../hooks/fetchPostById';
 import { getComments } from '../../../hooks/getComments';

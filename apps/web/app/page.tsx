@@ -13,7 +13,7 @@ export default async function Home() {
         <h2 className="font-bold mb-3 text-2xl">Blog</h2>
         <p className="text-gray-400 font-medium">Nosso blog foi feito dedicado a abordar temas que envolvem essa raça de cachorros conhecida como Corgi.</p>
         <PostsWithFilter />
-        <Pagination />
+        {/* <Pagination /> */}
       </div>
     </>
   );

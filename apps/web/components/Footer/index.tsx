@@ -9,9 +9,9 @@ export function Footer() {
                     <h2 className="text-xl font-bold">Corgi Blog</h2>
                     <p>Nosso blog é dedicado a compartilhar curiosidades, cuidados e tudo o que envolve o mundo encantador dos Corgis</p>
                     <div className="flex gap-4 mt-4">
-                        <span className="bg-[#303030] w-10 h-10 grid place-items-center rounded-full"><FaFacebookF /></span>
-                        <span className="bg-[#303030] w-10 h-10 grid place-items-center rounded-full"><FaInstagram /></span>
-                        <span className="bg-[#303030] w-10 h-10 grid place-items-center rounded-full"><FaTwitter /></span>
+                        <span className="bg-[#303030] w-10 h-10 grid place-items-center rounded-full cursor-pointer transition-all duration-500 hover:bg-orange-400"><FaFacebookF /></span>
+                        <span className="bg-[#303030] w-10 h-10 grid place-items-center rounded-full cursor-pointer transition-all duration-500 hover:bg-orange-400"><FaInstagram /></span>
+                        <span className="bg-[#303030] w-10 h-10 grid place-items-center rounded-full cursor-pointer transition-all duration-500 hover:bg-orange-400"><FaTwitter /></span>
                     </div>
                 </div>
                 <div className="py-4 border-t border-gray-600 w-full text-center text-sm text-white/50">

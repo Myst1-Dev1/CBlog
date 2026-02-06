@@ -12,7 +12,7 @@ import { CreateUserDto } from './dto/createUserDto';
 import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dto/loginDto';
 import { JwtService } from '@nestjs/jwt';
-import { UserService } from 'src/user/user.service';
+import { UserService } from '../user/user.service';
 import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
