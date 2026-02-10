@@ -9,3 +9,86 @@
     @apply rounded-md p-3 w-full border border-gray-300 outline-none
   }
 }
+
+@layer base {
+  :root {
+    --background: #ffffff;
+    --foreground: #171717;
+    --card-bg: #ffffff;
+    --card-border: #f3f4f6;
+    --text-muted: #6b7280;
+  }
+
+  [data-theme="dark"] {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+    --card-bg: #171717;
+    --card-border: #262626;
+    --text-muted: #a3a3a3;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    min-height: 100vh;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+figure {
+  margin: auto !important;
+}
+
+@layer components {
+  .prose-custom {
+    @apply text-gray-800 leading-8 text-lg;
+  }
+
+  .prose-custom p {
+    @apply mb-6;
+  }
+
+  .prose-custom h2 {
+    @apply text-3xl font-bold mt-12 mb-6 text-gray-900;
+  }
+
+  .prose-custom h3 {
+    @apply text-2xl font-bold mt-8 mb-4 text-gray-900;
+  }
+
+  .prose-custom ul {
+    @apply list-disc list-inside mb-6 ml-4 space-y-2;
+  }
+
+  .prose-custom ol {
+    @apply list-decimal list-inside mb-6 ml-4 space-y-2;
+  }
+
+  .prose-custom blockquote {
+    @apply border-l-4 border-orange-500 pl-6 italic my-8 text-gray-600 bg-orange-50 py-4 pr-4 rounded-r-lg;
+  }
+
+  .prose-custom img {
+    @apply w-full rounded-2xl shadow-lg my-10 aspect-video object-cover;
+  }
+
+  .prose-custom a {
+    @apply text-orange-600 underline underline-offset-4 decoration-2 decoration-orange-200 hover:decoration-orange-600 transition-all;
+  }
+}

@@ -3,14 +3,17 @@
 import Link from "next/link";
 import { FaBars, FaTimes, FaUserCircle, FaSignOutAlt } from "react-icons/fa";
 import { useState } from "react";
+import { ThemeToggle } from "../ThemeToggle";
 import { FormModal } from "./FormModal";
 import { useUserStore } from "../../hooks/user/useUserStore";
 import { usePathname } from "next/navigation";
 
 import Cookies from 'js-cookie';
+import { useThemeStore } from "../../hooks/useThemeStore";
 
 export function Header() {
-    const {user, clearUser, loading } = useUserStore();
+    const { user, clearUser, loading } = useUserStore();
+    const { theme } = useThemeStore();
 
     const path = usePathname();
 
@@ -22,16 +25,16 @@ export function Header() {
 
     return (
         <>
-        <header className={`z-30 flex justify-between items-center container py-6 absolute top-0 left-0 right-0 ${path === '/' || path.startsWith('/post') ? 'text-white' : 'text-black'}`}>
-            <Link href="/" className="text-2xl font-bold">Corgi Blog</Link>
+            <header className={`z-30 flex justify-between items-center container py-6 absolute top-0 left-0 right-0 ${path === '/' || path.startsWith('/perfil') || path.startsWith('/post') ? 'text-white' : 'text-black'} ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+                <Link href="/" className="text-2xl font-bold">Corgi Blog</Link>
 
-            <nav className="hidden md:flex items-center gap-6">
-                <Link href="/alimentacao" className="font-semibold text-[15px] transition-all duration-300 hover:text-orange-500">Alimentação</Link>
-                <Link href="/treinamento" className="font-semibold text-[15px] transition-all duration-300 hover:text-orange-500">Treinamento</Link>
-                <Link href="/saude" className="font-semibold text-[15px] transition-all duration-300 hover:text-orange-500">Saúde</Link>
-            </nav>
+                <nav className="hidden md:flex items-center gap-6">
+                    <Link href="/alimentacao" className="font-semibold text-[15px] transition-all duration-300 hover:text-orange-500">Alimentação</Link>
+                    <Link href="/treinamento" className="font-semibold text-[15px] transition-all duration-300 hover:text-orange-500">Treinamento</Link>
+                    <Link href="/saude" className="font-semibold text-[15px] transition-all duration-300 hover:text-orange-500">Saúde</Link>
+                </nav>
 
-            {/* <div className="max-w-72 w-full p-2 rounded-md bg-[#ffffff56] hidden md:flex items-center gap-3">
+                {/* <div className="max-w-72 w-full p-2 rounded-md bg-[#ffffff56] hidden md:flex items-center gap-3">
                 <input
                     type="text"
                     className="w-full border-none outline-none font-semibold bg-transparent placeholder-white"
@@ -40,53 +43,55 @@ export function Header() {
                 <FaSearch className="text-white" />
             </div> */}
 
-            {isLogged ? loading ? 'Carregando...' :
-            <div className="hidden md:flex items-center gap-5 relative">
-                <Link href="/perfil">
-                    <FaUserCircle className="text-3xl cursor-pointer" />
-                </Link>
-                <FaSignOutAlt onClick={clearUser} className="cursor-pointer transition-all duration-500 hover:text-orange-400" />
-            </div>
-            :
-            <div className="hidden md:flex items-center gap-4">
-                <span onClick={() => {setIsModalOpen(true); setFormType('signIn')}} className="p-3 font-semibold transition-all duration-500 rounded-md cursor-pointer hover:bg-orange-500">Login</span>
-                <button onClick={() => {setIsModalOpen(true); setFormType('signUp')}} className="bg-white w-fit p-3 rounded-md font-semibold cursor-pointer transition-all text-black duration-500 hover:bg-orange-500 hover:text-white">Cadastro</button>
-            </div>
-            }
-
-            <div className="flex md:hidden gap-4">
-                {user ?
-                    
-                    <FaUserCircle className="text-3xl cursor-pointer" />
-                   : ''
+                {isLogged ? loading ? 'Carregando...' :
+                    <div className="hidden md:flex items-center gap-3">
+                        <ThemeToggle />
+                        <Link href="/perfil">
+                            <FaUserCircle className="text-3xl cursor-pointer" />
+                        </Link>
+                        <FaSignOutAlt onClick={clearUser} className="cursor-pointer transition-all duration-500 hover:text-orange-400" />
+                    </div>
+                    :
+                    <div className="hidden md:flex items-center gap-4">
+                        <ThemeToggle />
+                        <span onClick={() => { setIsModalOpen(true); setFormType('signIn') }} className="p-3 font-semibold transition-all duration-500 rounded-md cursor-pointer hover:bg-orange-500">Login</span>
+                        <button onClick={() => { setIsModalOpen(true); setFormType('signUp') }} className="bg-white w-fit p-3 rounded-md font-semibold cursor-pointer transition-all text-black duration-500 hover:bg-orange-500 hover:text-white">Cadastro</button>
+                    </div>
                 }
-                <button className="text-2xl" onClick={() => setOpen(!open)}>
-                    {open ? <FaTimes /> : <FaBars />}
-                </button>
-            </div>
 
-            {open && (
+                <div className="flex md:hidden gap-4">
+                    {user ?
+
+                        <FaUserCircle className="text-3xl cursor-pointer" />
+                        : ''
+                    }
+                    <ThemeToggle />
+                    <button className="text-2xl" onClick={() => setOpen(!open)}>
+                        {open ? <FaTimes /> : <FaBars />}
+                    </button>
+                </div>
+
+                {open && (
+                    <div
+                        className="fixed inset-0 bg-black/60 md:hidden"
+                        onClick={() => setOpen(false)}
+                    />
+                )}
+
                 <div
-                    className="fixed inset-0 bg-black/60 md:hidden"
-                    onClick={() => setOpen(false)}
-                />
-            )}
+                    className={`fixed top-0 right-0 h-full w-3/4 max-w-xs bg-black text-white z-50 transform ${open ? "translate-x-0" : "translate-x-full"
+                        } transition-transform duration-300 ease-in-out md:hidden`}
+                >
+                    <div className="flex flex-col gap-6 p-6">
+                        <h2 className="text-xl font-bold">Corgi Blog</h2>
+                        <FaTimes className="absolute top-6 right-2 text-xl cursor-pointer text-white" onClick={() => setOpen(false)} />
+                        <nav className="flex flex-col gap-4">
+                            <Link href="/alimentacao" onClick={() => setOpen(false)} className="font-semibold text-lg transition-all duration-300 hover:text-orange-500">Alimentação</Link>
+                            <Link href="/treinamento" onClick={() => setOpen(false)} className="font-semibold text-lg transition-all duration-300 hover:text-orange-500">Treinamento</Link>
+                            <Link href="/saude" onClick={() => setOpen(false)} className="font-semibold text-lg transition-all duration-300 hover:text-orange-500">Saúde</Link>
+                        </nav>
 
-            <div
-                className={`fixed top-0 right-0 h-full w-3/4 max-w-xs bg-black text-white z-50 transform ${
-                    open ? "translate-x-0" : "translate-x-full"
-                } transition-transform duration-300 ease-in-out md:hidden`}
-            >
-                <div className="flex flex-col gap-6 p-6">
-                    <h2 className="text-xl font-bold">Corgi Blog</h2>
-                    <FaTimes className="absolute top-6 right-2 text-xl cursor-pointer text-white" onClick={() => setOpen(false)}/>
-                    <nav className="flex flex-col gap-4">
-                        <Link href="/" onClick={() => setOpen(false)} className="font-semibold text-lg transition-all duration-300 hover:text-orange-500">Alimentação</Link>
-                        <Link href="/" onClick={() => setOpen(false)} className="font-semibold text-lg transition-all duration-300 hover:text-orange-500">Treinamento</Link>
-                        <Link href="/" onClick={() => setOpen(false)} className="font-semibold text-lg transition-all duration-300 hover:text-orange-500">Saúde</Link>
-                    </nav>
-
-                    {/* <div className="w-full p-2 rounded-md bg-[#ffffff56] flex items-center gap-3">
+                        {/* <div className="w-full p-2 rounded-md bg-[#ffffff56] flex items-center gap-3">
                         <input
                             type="text"
                             className="w-full border-none outline-none font-semibold bg-transparent placeholder-white"
@@ -95,22 +100,22 @@ export function Header() {
                         <FaSearch className="text-white" />
                     </div> */}
 
-                    <div className="flex flex-col gap-4">
-                        {user ? 
-                            <button className="border border-white w-full py-3 rounded-md font-semibold cursor-pointer transition-all text-white duration-300 hover:bg-orange-500 hover:text-orange-400">Sair</button>
-                        :
-                        <>
-                            <span onClick={() =>  {setIsModalOpen(true); setOpen(false); setFormType('signIn')}} className="p-3 font-semibold text-center transition-all duration-300 rounded-md cursor-pointer hover:bg-orange-500">Login</span>
-                            <button onClick={() =>  {setIsModalOpen(true); setOpen(false); setFormType('signUp')}} className="bg-white w-full py-3 rounded-md font-semibold cursor-pointer transition-all text-black duration-300 hover:bg-orange-500 hover:text-white">
-                                Cadastro
-                            </button>
-                        </>
-                        }
+                        <div className="flex flex-col gap-4">
+                            {user ?
+                                <button className="border border-white w-full py-3 rounded-md font-semibold cursor-pointer transition-all text-white duration-300 hover:bg-orange-500 hover:text-orange-400">Sair</button>
+                                :
+                                <>
+                                    <span onClick={() => { setIsModalOpen(true); setOpen(false); setFormType('signIn') }} className="p-3 font-semibold text-center transition-all duration-300 rounded-md cursor-pointer hover:bg-orange-500">Login</span>
+                                    <button onClick={() => { setIsModalOpen(true); setOpen(false); setFormType('signUp') }} className="bg-white w-full py-3 rounded-md font-semibold cursor-pointer transition-all text-black duration-300 hover:bg-orange-500 hover:text-white">
+                                        Cadastro
+                                    </button>
+                                </>
+                            }
+                        </div>
                     </div>
                 </div>
-            </div>
-        </header>
-        <FormModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} formType={formType} setFormType={setFormType} />
+            </header>
+            <FormModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} formType={formType} setFormType={setFormType} />
         </>
     );
 }

@@ -6,7 +6,7 @@ interface PostIntroProps {
 }
 
 export function PostIntro({ title, category, postImageUrl }: PostIntroProps) {
-    
+
     return (
         <>
             <div
@@ -17,8 +17,8 @@ export function PostIntro({ title, category, postImageUrl }: PostIntroProps) {
                     backgroundPosition: 'center',
                 }}
             >
-                <div className="absolute z-10 inset-0 bg-linear-to-b from-black/50 to-transparent"></div>
-                <div className="container flex items-end justify-end h-[50vh] py-12 z-20">
+                <div className="absolute inset-0 z-10 bg-linear-to-b from-black/70 to-transparent" />
+                <div className="max-w-3xl container flex items-end justify-end h-[50vh] py-12 z-20">
                     <div className="text-white flex justify-center items-center w-full">
                         <div className="w-full flex justify-center items-center flex-col gap-4">
                             <span className="w-fit px-2 py-1 bg-orange-300 rounded-full font-medium text-white">{category}</span>

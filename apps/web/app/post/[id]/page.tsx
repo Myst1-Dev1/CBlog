@@ -5,24 +5,33 @@ import { Comments } from '../../../components/post/Comments';
 import { fetchPostById } from '../../../hooks/fetchPostById';
 import { getComments } from '../../../hooks/getComments';
 
-export default async function Post({ params }:any) {
+export default async function Post({ params }: any) {
     const { id } = await params;
 
     const data = await fetchPostById(Number(id));
 
     const comments = await getComments(Number(id));
 
+    console.log(data?.description);
+
     return (
         <>
-           <PostIntro title={data?.title} category={data?.category} postImageUrl={data?.postImageUrl} />
-           <div className="container py-8">
-                <div
-                    className="text-gray-500 font-thin text-sm"
-                    dangerouslySetInnerHTML={{ __html: data?.description }}
-                />
-           </div>
-           <Comments data = {data} comments = {comments} />
-           {/* <div className="py-8 container">
+            <PostIntro title={data?.title} category={data?.category} postImageUrl={data?.postImageUrl} />
+
+            <article className="container py-12 lg:py-20 px-4">
+                <div className="max-w-3xl mx-auto">
+                    <div
+                        className="text-gray-500 font-light"
+                        dangerouslySetInnerHTML={{ __html: data?.description }}
+                    />
+
+                    {/* Divider */}
+                    <div className="w-full h-px bg-gray-200 my-16" />
+
+                    <Comments data={data} comments={comments} />
+                </div>
+            </article>
+            {/* <div className="py-8 container">
                 <h2 className="text-2xl mb-5 font-bold">Continue Lendo</h2>
                 <div className="grid gap-8 grid-cols-1 lg:grid-cols-4">
                     <div className="w-full relative lg:col-span-2">

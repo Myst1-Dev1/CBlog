@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { Post } from '../../@types/Post';
-// import Cookies from 'js-cookie';
 
 const API_URL = 'http://localhost:4011/';
 
@@ -19,9 +18,7 @@ export const usePostStore = create<PostState>((set) => ({
     fetchPostData: async () => {
         const res = await fetch(`${API_URL}posts`, {
             method: 'GET',
-            next: {
-                tags: ['posts']
-            }
+            cache: 'no-store',
         });
 
         if (!res.ok) {

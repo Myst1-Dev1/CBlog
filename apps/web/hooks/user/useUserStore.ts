@@ -45,9 +45,7 @@ export const useUserStore = create<UserState>((set) => ({
         headers: {
           Authorization: `Bearer ${parsedUser.token}`,
         },
-        next: {
-          tags: ['user']
-        }
+        cache: 'no-store'
       });
 
       if (!res.ok) {
@@ -71,21 +69,21 @@ export const useUserStore = create<UserState>((set) => ({
   fetchAllUsers: async () => {
     set({ loading: true, error: null });
 
-      const res = await fetch(`${API_URL}auth/users`, {
-        method: 'GET',
-        cache: 'no-store',
-      });
+    const res = await fetch(`${API_URL}auth/users`, {
+      method: 'GET',
+      cache: 'no-store',
+    });
 
-      if (!res.ok) {
-        throw new Error('Erro ao buscar usuário');
-      }
+    if (!res.ok) {
+      throw new Error('Erro ao buscar usuário');
+    }
 
-      const data = await res.json();
+    const data = await res.json();
 
-      set({
-        users: data,
-        loading: false,
-      });
+    set({
+      users: data,
+      loading: false,
+    });
   },
 
   clearUser: () => {

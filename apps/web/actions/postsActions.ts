@@ -54,7 +54,7 @@ export async function createNewPost(
       return { success: false, message: "Erro ao criar postagem" };
     }
 
-    revalidatePath('/profile');
+    revalidatePath('/perfil');
 
     return { success: true, message: "Post criado com sucesso!" };
   } catch (error) {
@@ -135,7 +135,7 @@ export async function deletePost(id: number) {
     if (!data.token) {
       return { success: false, message: "Token de autenticação não encontrado." };
     }
-    
+
     await fetch(`${API_URL}posts/` + id, {
       method: "DELETE",
       headers: {
