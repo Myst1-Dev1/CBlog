@@ -10,29 +10,29 @@ interface SignUpProps {
     setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function SignUp({ setFormType, setIsModalOpen }:SignUpProps) {
+export function SignUp({ setFormType, setIsModalOpen }: SignUpProps) {
     const [formState, formAction, pending] = useActionState(handleRegister, { success: false });
     const [file, setFile] = useState<File | null>(null);
 
     async function handleRegister(prevState: any, formData: FormData) {
-            const result = await Register(prevState, formData);
-    
-            if (result?.message) {
-                if (result.success) {
-                    toast.success(result.message);
-                    setIsModalOpen(false);
-                    setFile(null);
-                } else {
-                    toast.error(result.message)
-                }
+        const result = await Register(prevState, formData);
+
+        if (result?.message) {
+            if (result.success) {
+                toast.success(result.message);
+                setIsModalOpen(false);
+                setFile(null);
+            } else {
+                toast.error(result.message)
             }
-    
-            return result;
         }
+
+        return result;
+    }
 
     return (
         <>
-            <div className='p-4'>
+            <div className='form-modal p-4'>
                 <h2 className='text-xl text-center font-bold'>Faça seu cadastro</h2>
                 <form action={formAction} className='mt-5 max-w-md w-full grid grid-cols-1 mx-auto gap-3'>
                     <div className='grid grid-cols-1 gap-3'>

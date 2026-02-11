@@ -7,6 +7,7 @@ import { useActionState, useState } from "react";
 import { Loading } from "../../Loading";
 import Image from "next/image";
 import { toast } from "react-toastify";
+import { usePostStore } from "../../../hooks/posts/usePostStore";
 
 interface NewPostModalProps {
     isOpen: boolean;
@@ -15,6 +16,7 @@ interface NewPostModalProps {
 
 export function NewPostModal({ isOpen, setIsOpen }: NewPostModalProps) {
     const [formState, formAction, pending] = useActionState(handleCreateNewPost, { success: false });
+    const { fetchPostData } = usePostStore();
 
     const [file, setFile] = useState<File | null>(null);
 
@@ -24,6 +26,7 @@ export function NewPostModal({ isOpen, setIsOpen }: NewPostModalProps) {
         if (result?.message) {
             if (result.success) {
                 toast.success(result.message);
+                await fetchPostData();
                 setIsOpen(false);
                 setFile(null);
             } else {

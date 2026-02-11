@@ -1,4 +1,9 @@
+'use client';
+
 import Image from "next/image";
+import { useGSAPAnimate } from "../../hooks/useGSAPAnimate";
+import { ANIM_CONFIG } from "../../utils/gsapConfig";
+import gsap from "gsap";
 
 interface IntroPagesProps {
     pageName: string
@@ -14,9 +19,25 @@ export function IntroPages(
     { pageName, title, description, btnText, categories, image, imagePosition }
         : IntroPagesProps) {
 
+    useGSAPAnimate(() => {
+        gsap.fromTo(".intro-pages", {
+            opacity: 0,
+            y: 20,
+            duration: ANIM_CONFIG.duration.medium,
+            ease: ANIM_CONFIG.easing.base,
+            delay: 0.2
+        }, {
+            opacity: 1,
+            y: 0,
+            duration: ANIM_CONFIG.duration.medium,
+            ease: ANIM_CONFIG.easing.base,
+            delay: 0.2
+        });
+    }, []);
+
     return (
         <>
-            <div className="grid grid-cols-1 lg:grid-cols-3 items-center gap-12">
+            <div className="intro-pages grid grid-cols-1 lg:grid-cols-3 items-center gap-12">
                 {imagePosition === true &&
                     <div className="relative flex justify-center lg:justify-end">
                         {/* <div className="absolute -z-10 w-72 h-72 lg:w-96 lg:h-96 bg-orange-100 rounded-full blur-3xl"></div> */}

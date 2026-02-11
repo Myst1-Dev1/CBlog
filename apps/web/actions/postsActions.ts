@@ -150,3 +150,61 @@ export async function deletePost(id: number) {
     console.log('Tivemos um erro ao deletar o post !', error);
   }
 }
+
+export async function updatePost(
+  id: number,
+  _: ActionResult,
+  formData: FormData
+): Promise<ActionResult> {
+  try {
+    const cookieStore = await cookies();
+    const cookie = cookieStore.get("user")?.value;
+
+    if (!cookie) {
+      return { success: false, message: "Usuário não autenticado" };
+    }
+
+    const data = JSON.parse(cookie);
+
+    if (!data.token) {
+      return { success: false, message: "Token de autenticação não encontrado." };
+    }
+
+    const image = formData.get("postImageUrl") as File | null;
+    const title = formData.get("title")?.toString() ?? "";
+    const category = formData.get("category")?.toString() ?? "";
+    const description = formData.get("description")?.toString() ?? "";
+
+    const body = new FormData();
+
+    body.append("authorId", String(data.id));
+    if (title) body.append("title", title);
+    if (category) body.append("category", category);
+    if (description) body.append("description", description);
+
+    if (image && image.size > 0) {
+      body.append("postImageUrl", image, image.name);
+    }
+
+    const res = await fetch(`${API_URL}posts/update/${id}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${data.token}`,
+      },
+      body,
+    });
+
+    if (!res.ok) {
+      const error = await res.text();
+      console.error(error);
+      return { success: false, message: "Erro ao atualizar postagem" };
+    }
+
+    revalidatePath('/perfil');
+
+    return { success: true, message: "Post atualizado com sucesso!" };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: "Falha ao atualizar post" };
+  }
+}

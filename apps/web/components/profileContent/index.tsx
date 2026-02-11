@@ -10,21 +10,33 @@ import { useUserStore } from "../../hooks/user/useUserStore";
 import { usePostStore } from "../../hooks/posts/usePostStore";
 import { deletePost } from "../../actions/postsActions";
 import { NewPostModal } from "./newPostModal";
+import { UpdatePostModal } from "./updatePostModal";
+import { Post } from "../../@types/Post";
 
 export function ProfileContent() {
     const { user } = useUserStore();
-    const { post } = usePostStore();
+    const { post, fetchPostData } = usePostStore();
     const [isNewPostModalOpen, setIsNewPostModalOpen] = useState(false);
+    const [isUpdatePostModalOpen, setIsUpdatePostModalOpen] = useState(false);
+    const [selectedPost, setSelectedPost] = useState<Post | null>(null);
 
     if (!post || !user) return null;
 
     const myPosts = post.filter((data) => data.authorId === user.id);
 
+    function handleEditPost(post: Post) {
+        setSelectedPost(post);
+        setIsUpdatePostModalOpen(true);
+    }
+
     async function handleDeletePost(id: number) {
+        console.log(id);
+
         if (!confirm("Tem certeza que deseja excluir este post?")) return;
 
         try {
             await deletePost(id);
+            await fetchPostData();
             toast.success('Post deletado com sucesso');
         } catch (error: any) {
             toast.error('Erro ao deletar o post');
@@ -46,7 +58,6 @@ export function ProfileContent() {
             <div className="container px-4 sm:px-6 relative z-10">
                 <div className="flex flex-col lg:flex-row items-start lg:items-end gap-6 -mt-20 mb-8">
 
-                    {/* 2. Overlapping Avatar */}
                     <div className="relative group">
                         <div className="p-1 rounded-full bg-white shadow-xl">
                             <Image
@@ -62,7 +73,6 @@ export function ProfileContent() {
                         </button>
                     </div>
 
-                    {/* 3. User Info & Actions */}
                     <div className="flex-1 w-full flex flex-col lg:flex-row lg:items-end justify-between gap-4">
                         <div className="flex flex-col gap-1">
                             <h1 className="text-3xl lg:text-4xl font-bold text-white">{user?.username}</h1>
@@ -72,7 +82,6 @@ export function ProfileContent() {
                             </p>
                         </div>
 
-                        {/* CTA Buttons */}
                         <div className="flex items-center gap-3">
                             <button className="cursor-pointer px-4 py-2 bg-white border border-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-50 transition-colors shadow-sm">
                                 Editar Perfil
@@ -100,7 +109,7 @@ export function ProfileContent() {
                         </div>
                     </div>
 
-                    <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4">
+                    <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 w-fit flex items-center gap-4">
                         <div className="p-3 bg-purple-50 text-purple-600 rounded-lg">
                             <FaChartLine size={20} />
                         </div>
@@ -153,7 +162,11 @@ export function ProfileContent() {
 
                                         {/* Hover Actions */}
                                         <div className="absolute top-4 right-4 flex flex-col gap-2 translate-x-12 group-hover:translate-x-0 transition-transform duration-300 ease-out">
-                                            <button className="cursor-pointer p-2 bg-white text-gray-700 rounded-full shadow-lg hover:bg-blue-50 hover:text-blue-600 transition-colors" title="Editar">
+                                            <button
+                                                onClick={() => handleEditPost(post)}
+                                                className="cursor-pointer p-2 bg-white text-gray-700 rounded-full shadow-lg hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                                                title="Editar"
+                                            >
                                                 <FaPencilAlt size={14} />
                                             </button>
                                             <button
@@ -199,6 +212,13 @@ export function ProfileContent() {
             </div>
 
             <NewPostModal isOpen={isNewPostModalOpen} setIsOpen={setIsNewPostModalOpen} />
+            {selectedPost && (
+                <UpdatePostModal
+                    isOpen={isUpdatePostModalOpen}
+                    setIsOpen={setIsUpdatePostModalOpen}
+                    post={selectedPost}
+                />
+            )}
         </div>
     )
 }

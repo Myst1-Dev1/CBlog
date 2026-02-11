@@ -5,6 +5,8 @@ import { FaArrowRightLong } from "react-icons/fa6";
 import { FaCalendarAlt } from "react-icons/fa";
 import { Post } from "../../@types/Post";
 import { User } from "../../hooks/user/useUserStore";
+import { useRef } from "react";
+import gsap from "gsap";
 
 interface PostCardProps {
     post: Post;
@@ -12,6 +14,7 @@ interface PostCardProps {
 }
 
 export function PostCard({ post, author }: PostCardProps) {
+    const arrowRef = useRef<SVGElement>(null);
 
     const htmlToText = (html: string) => {
         if (!html) return '';
@@ -22,8 +25,28 @@ export function PostCard({ post, author }: PostCardProps) {
         return div.textContent || div.innerText || '';
     };
 
+    const handleMouseEnter = () => {
+        gsap.to(arrowRef.current, {
+            x: 5,
+            duration: 0.3,
+            ease: "power2.out"
+        });
+    };
+
+    const handleMouseLeave = () => {
+        gsap.to(arrowRef.current, {
+            x: 0,
+            duration: 0.3,
+            ease: "power2.inOut"
+        });
+    };
+
     return (
-        <div className="group bg-[var(--card-bg)] rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-[var(--card-border)] overflow-hidden flex flex-col h-full hover:-translate-y-1">
+        <div
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            className="group bg-[var(--card-bg)] rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-[var(--card-border)] overflow-hidden flex flex-col h-full hover:-translate-y-1"
+        >
             {/* Image Area */}
             <div className="relative h-60 overflow-hidden">
                 <Image
@@ -73,7 +96,6 @@ export function PostCard({ post, author }: PostCardProps) {
                             />
                             <div className="flex flex-col">
                                 <span className="text-xs font-bold text-[var(--foreground)]">{author.username}</span>
-                                {/* <span className="text-[10px] text-gray-400">Autor</span> */}
                             </div>
                         </div>
                     ) : (
@@ -88,7 +110,9 @@ export function PostCard({ post, author }: PostCardProps) {
                         className="inline-flex items-center gap-2 text-sm font-bold text-orange-600 hover:text-orange-700 transition-colors group/link"
                     >
                         Ler mais
-                        <FaArrowRightLong className="transform transition-transform group-hover/link:translate-x-1" />
+                        <span ref={arrowRef as any} className="inline-block transition-transform">
+                            <FaArrowRightLong />
+                        </span>
                     </Link>
                 </div>
             </div>

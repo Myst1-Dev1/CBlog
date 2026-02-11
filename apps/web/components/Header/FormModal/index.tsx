@@ -4,6 +4,10 @@ import { Login } from '../../../actions/signActions';
 import { SignUp } from './SignUp';
 import { Loading } from '../../Loading';
 import { toast } from 'react-toastify';
+import { useGSAP } from '@gsap/react';
+import { ANIM_CONFIG } from '../../../utils/gsapConfig';
+import gsap from 'gsap';
+import { useUserStore } from '../../../hooks/user/useUserStore';
 
 interface FormModalProps {
     isModalOpen: boolean;
@@ -12,8 +16,10 @@ interface FormModalProps {
     setFormType: React.Dispatch<React.SetStateAction<"signIn" | "signUp">>;
 }
 
-export function FormModal({ isModalOpen, setIsModalOpen, formType, setFormType }:FormModalProps) {
+export function FormModal({ isModalOpen, setIsModalOpen, formType, setFormType }: FormModalProps) {
     const [formState, formAction, pending] = useActionState(handleLogin, { success: false });
+
+    const fetchUserData = useUserStore((state) => state.fetchUserData);
 
     async function handleLogin(prevState: any, formData: FormData) {
         const result = await Login(prevState, formData);
@@ -21,6 +27,7 @@ export function FormModal({ isModalOpen, setIsModalOpen, formType, setFormType }
         if (result?.message) {
             if (result.success) {
                 toast.success(result.message);
+                await fetchUserData();
                 setIsModalOpen(false);
 
             } else {
@@ -31,31 +38,47 @@ export function FormModal({ isModalOpen, setIsModalOpen, formType, setFormType }
         return result;
     }
 
+    useGSAP(() => {
+        gsap.fromTo(".form-modal", {
+            opacity: 0,
+            y: 20,
+            duration: ANIM_CONFIG.duration.medium,
+            ease: ANIM_CONFIG.easing.base,
+            delay: 0.2
+        }, {
+            opacity: 1,
+            y: 0,
+            duration: ANIM_CONFIG.duration.medium,
+            ease: ANIM_CONFIG.easing.base,
+            delay: 0.2
+        });
+    }, [formType]);
+
     return (
         <>
             <Modal isOpen={isModalOpen} setisOpen={setIsModalOpen} maxWidth='max-w-[500px]'>
                 {formType === 'signIn' &&
-                <div className='p-4'>
-                    <h2 className='text-xl text-center font-bold'>Faça seu login</h2>
-                    <form action={formAction} className='mt-5 max-w-md w-full grid grid-cols-1 mx-auto gap-3'>
-                        <div className='grid grid-cols-1 gap-3'>
-                            <label htmlFor="email" className='font-semibold'>Email</label>
-                            <input type="email" id='email' name='email' className='input' placeholder='john@gmail.com' />
-                        </div>
-                        <div className='grid grid-cols-1 gap-3'>
-                            <label htmlFor="password" className='font-semibold'>Senha</label>
-                            <input type="password" id='password' name='password' className='input' placeholder='********' />
-                        </div>
-                        {formState.message !== '' ?
-                            <p className={`${formState.success === false ? 'text-red-600' : 'text-green-600'} font-bold mx-auto`}>{formState.message}</p>
-                            : ''
-                        }
-                        <span className='text-center'>Não possui uma conta? <span onClick={() => setFormType('signUp')} className='font-bold text-orange-400 cursor-pointer'>Cadastro</span></span>
-                        <button className='bg-orange-500 cursor-pointer font-semibold text-xl mt-3 text-white p-3 rounded-md w-full transition-all duration-500 hover:bg-orange-600'>
-                            {pending ? <Loading /> : 'Entrar'}
-                        </button>
-                    </form>
-                </div>
+                    <div className='form-modal p-4'>
+                        <h2 className='text-xl text-center font-bold'>Faça seu login</h2>
+                        <form action={formAction} className='mt-5 max-w-md w-full grid grid-cols-1 mx-auto gap-3'>
+                            <div className='grid grid-cols-1 gap-3'>
+                                <label htmlFor="email" className='font-semibold'>Email</label>
+                                <input type="email" id='email' name='email' className='input' placeholder='john@gmail.com' />
+                            </div>
+                            <div className='grid grid-cols-1 gap-3'>
+                                <label htmlFor="password" className='font-semibold'>Senha</label>
+                                <input type="password" id='password' name='password' className='input' placeholder='********' />
+                            </div>
+                            {formState.message !== '' ?
+                                <p className={`${formState.success === false ? 'text-red-600' : 'text-green-600'} font-bold mx-auto`}>{formState.message}</p>
+                                : ''
+                            }
+                            <span className='text-center'>Não possui uma conta? <span onClick={() => setFormType('signUp')} className='font-bold text-orange-400 cursor-pointer'>Cadastro</span></span>
+                            <button className='bg-orange-500 cursor-pointer font-semibold text-xl mt-3 text-white p-3 rounded-md w-full transition-all duration-500 hover:bg-orange-600'>
+                                {pending ? <Loading /> : 'Entrar'}
+                            </button>
+                        </form>
+                    </div>
                 }
 
                 {formType === 'signUp' &&
