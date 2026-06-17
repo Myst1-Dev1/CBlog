@@ -28,8 +28,7 @@ export function Intro() {
   const authors = users?.filter(user =>
     authorIds.has(user.id)
   );
-
-  // Animação de entrada do conteúdo do slide ativo
+  
   useGSAPAnimate(() => {
     const activeSlide = document.querySelector('.swiper-slide-active .intro-content');
     if (activeSlide) {
@@ -60,7 +59,55 @@ export function Intro() {
         }}
         onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
       >
-        {postsData.map(data => {
+       {!postsData || postsData.length === 0 ? (
+        <SwiperSlide>
+          <div className="flex items-end justify-center relative w-full min-h-dvh lg:min-h-screen"
+            style={{
+              backgroundImage: "url('/images/corgi.webp')",
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          >
+            <div className="absolute inset-0 z-10 bg-linear-to-b from-black/70 to-transparent" />
+
+            <div className="container flex items-end justify-end min-h-screen py-12 z-20">
+              <div className="intro-content text-white flex justify-between flex-wrap gap-7 lg:gap-0 items-center w-full">
+                <div className="max-w-md w-full flex flex-col gap-4">
+                  <span className="w-fit px-2 py-1 bg-zinc-600 rounded-full font-medium shadow-lg text-sm">
+                    Sem conteúdo
+                  </span>
+
+                  <h2 className="font-bold text-3xl lg:text-4xl leading-tight">
+                    Nenhum post encontrado por aqui ainda
+                  </h2>
+
+                  <p className="text-sm lg:text-base font-light opacity-90">
+                    Parece que nosso feed está vazio no momento. Crie uma publicação para começar a povoar este carrossel!
+                  </p>
+                </div>
+
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center gap-5">
+                    <Image
+                      src="/images/user.jpg"
+                      width={200}
+                      height={200}
+                      className="w-14 h-14 rounded-full object-cover border-2 border-white/20"
+                      alt="foto padrão"
+                    />
+                    <h3 className="font-semibold text-lg">Sistema</h3>
+                  </div>
+                  <span className="text-sm font-light opacity-80">
+                    Nenhum registro
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </SwiperSlide>
+      ) : (
+        /* ================= SEU MAP ORIGINAL SE HOUVER DADOS ================= */
+        postsData.map(data => {
           const author = authors?.find(
             (author) => author.id === data.authorId
           );
@@ -68,7 +115,8 @@ export function Intro() {
             <SwiperSlide key={data.id}>
               <div className="flex items-end justify-center relative w-full min-h-dvh lg:min-h-screen"
                 style={{
-                  backgroundImage: `url(${data.postImageUrl})`,
+                  // Troquei de ?? para || para garantir que strings vazias '' também peguem o corgi
+                  backgroundImage: `url(${data.postImageUrl || '/images/corgi.webp'})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }}
@@ -108,7 +156,8 @@ export function Intro() {
                           className="w-14 h-14 rounded-full object-cover border-2 border-white/20"
                           alt="foto do usuário"
                         />
-                        <h3 className="font-semibold text-lg">{author?.username}</h3>
+                        {/* Fallback de nome se o autor não for encontrado */}
+                        <h3 className="font-semibold text-lg">{author?.username || "Autor Anônimo"}</h3>
                       </div>
 
                       <span className="text-sm font-light opacity-80">
@@ -120,7 +169,8 @@ export function Intro() {
               </div>
             </SwiperSlide>
           )
-        })}
+        })
+      )}
       </Swiper>
 
       <div className="absolute bottom-5 left-4 lg:left-10 z-30 flex items-center gap-3">

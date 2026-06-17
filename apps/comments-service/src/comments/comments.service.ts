@@ -46,6 +46,18 @@ export class CommentsService {
     });
   }
 
+  async getLatestCommentsForAuthor(authorId: number) {
+    return this.commentsRepository.find({
+      where: {
+        postAuthorId: authorId,
+      },
+      order: {
+        createdAt: 'DESC',
+      },
+      take: 10,
+    });
+  }
+
   ping() {
     return {
       ok: true,

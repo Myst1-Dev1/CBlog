@@ -6,11 +6,11 @@ import { cookies } from "next/headers";
 
 const API_URL = 'http://localhost:4011/'
 
-export async function Login(_:ActionResult, formData: FormData): Promise<ActionResult> {
+export async function Login(_: ActionResult, formData: FormData): Promise<ActionResult> {
     const email = formData.get('email');
     const password = formData.get('password');
 
-    if(!email || !password) return { success: false, message:'Preencha todos os campos' };
+    if (!email || !password) return { success: false, message: 'Preencha todos os campos' };
 
     try {
         const res = await fetch(`${API_URL}auth/login`, {
@@ -27,7 +27,7 @@ export async function Login(_:ActionResult, formData: FormData): Promise<ActionR
         const data = await res.json();
 
         const cookieStore = await cookies();
-            cookieStore.set({
+        cookieStore.set({
             name: "user",
             value: JSON.stringify(data),
             path: "/",
@@ -36,13 +36,13 @@ export async function Login(_:ActionResult, formData: FormData): Promise<ActionR
 
         revalidatePath('/', 'page');
 
-        return { success: true, message:'Login feito com sucesso' }
-    } catch (error:any) {
+        return { success: true, message: 'Login feito com sucesso' }
+    } catch (error: any) {
         return { success: false, message: error.message };
     }
 }
 
-export async function Register(_:ActionResult, formData: FormData): Promise<ActionResult> {
+export async function Register(_: ActionResult, formData: FormData): Promise<ActionResult> {
     try {
         const image = formData.get("image") as File | null;
         const username = formData.get('username');
@@ -50,9 +50,9 @@ export async function Register(_:ActionResult, formData: FormData): Promise<Acti
         const password = formData.get('password');
         const confirm_password = formData.get('confirm_password');
 
-        if(!username || !email || !password) return { success: false, message:'Preencha todos os campos !' };
+        if (!username || !email || !password) return { success: false, message: 'Preencha todos os campos !' };
 
-        if(password !== confirm_password) return { success: false, message:'As senhas precisam ser iguais !' }
+        if (password !== confirm_password) return { success: false, message: 'As senhas precisam ser iguais !' }
 
         const body = new FormData();
 
@@ -70,9 +70,11 @@ export async function Register(_:ActionResult, formData: FormData): Promise<Acti
             cache: 'no-store'
         });
 
-        if(!res.ok) return { success: false, message: 'Tivemos um erro ao fazer o cadastro' };
+        console.log(res);
 
-        return { success: true, message:'Cadastro feito com sucesso' }
+        if (!res.ok) return { success: false, message: 'Tivemos um erro ao fazer o cadastro' };
+
+        return { success: true, message: 'Cadastro feito com sucesso' }
     } catch (error: any) {
         return { success: false, message: error.message };
     }

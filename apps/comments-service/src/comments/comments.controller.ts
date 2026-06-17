@@ -17,6 +17,11 @@ export class CommentsController {
     return this.commentsService.getAllComments(data.postId);
   }
 
+  @MessagePattern('comments.latestForAuthor')
+    latestForAuthor(@Payload() authorId: number) {
+      return this.commentsService.getLatestCommentsForAuthor(authorId);
+  }
+
   @MessagePattern('service.ping')
   ping() {
     return this.commentsService.ping();

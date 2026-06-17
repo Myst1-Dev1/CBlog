@@ -66,7 +66,7 @@ export function Comments({ data, comments }: CommentsProps) {
                         <div className="flex-1">
                             <input type="hidden" name="postId" value={data.id} />
                             <input type="hidden" name="authorId" value={user?.id} />
-                            <input type="text" value={user?.username} className="hidden" name="name" />
+                            <input type="text" value={user?.username} className="hidden" name="name" readOnly />
 
                             <textarea
                                 name="content"

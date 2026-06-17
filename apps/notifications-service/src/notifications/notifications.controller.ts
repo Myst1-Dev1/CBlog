@@ -17,7 +17,6 @@ export class NotificationsController {
       commentId: number;
     },
   ) {
-    console.log('📨 EVENTO RECEBIDO:', data);
 
     return this.notificationsService.create({
       userId: data.targetUserId,
@@ -37,9 +36,19 @@ export class NotificationsController {
     return this.notificationsService.findByUser(userId);
   }
 
+  @MessagePattern('notifications.findUnreadByUser')
+    findUnreadByUser(@Payload() userId: number) {
+      return this.notificationsService.findUnreadByUser(userId);
+  }
+
   @MessagePattern('notifications.markAsRead')
-  markAsRead(id: number) {
-    return this.notificationsService.markAsRead(id);
+    markAsRead(id: number) {
+      return this.notificationsService.markAsRead(id);
+    }
+
+  @MessagePattern('notifications.markAllAsRead')
+    markAllAsRead(@Payload() userId: number) {
+      return this.notificationsService.markAllAsRead(userId);
   }
 
   @MessagePattern('service.ping')

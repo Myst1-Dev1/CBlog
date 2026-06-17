@@ -1,9 +1,11 @@
 import {
+  Body,
   Controller,
   Get,
   Inject,
   Param,
   Patch,
+  Post,
   UseGuards,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
@@ -24,6 +26,16 @@ export class NotificationsController {
       this.notificationsClient.send('notifications.findByUser', Number(userId)),
     );
   }
+
+  @Post('read-all')
+    markAllAsRead(@Body() body: { userId: number }) {
+      return firstValueFrom(
+        this.notificationsClient.send(
+          'notifications.markAllAsRead',
+          body.userId,
+        ),
+      );
+    }
 
   @Patch(':id/read')
   async markAsRead(@Param('id') id: string): Promise<any> {

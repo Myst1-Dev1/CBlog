@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FaBars, FaTimes, FaUserCircle, FaSignOutAlt } from "react-icons/fa";
+import { FaBars, FaTimes, FaUserCircle, FaSignOutAlt, FaBell } from "react-icons/fa";
 import { useState, useRef } from "react";
 import { ThemeToggle } from "../ThemeToggle";
 import { FormModal } from "./FormModal";
@@ -13,6 +13,7 @@ import { useThemeStore } from "../../hooks/useThemeStore";
 import { useGSAPAnimate } from "../../hooks/useGSAPAnimate";
 import gsap from "gsap";
 import { ANIM_CONFIG } from "../../utils/gsapConfig";
+import { NotificationBox } from "./NotificationBox";
 
 export function Header() {
     const headerRef = useRef<HTMLElement>(null);
@@ -75,6 +76,7 @@ export function Header() {
                 {isLogged ? loading ? 'Carregando...' :
                     <div className="hidden md:flex items-center gap-3">
                         <ThemeToggle />
+                        <NotificationBox theme = {theme} />
                         <Link href="/perfil" className="hover:scale-110 transition-transform duration-300">
                             <FaUserCircle className="text-3xl cursor-pointer" />
                         </Link>
@@ -92,11 +94,12 @@ export function Header() {
                 }
 
                 <div className="flex md:hidden gap-4">
+                    <ThemeToggle />
+                    <NotificationBox theme = {theme} />
                     {user ?
                         <FaUserCircle className="text-3xl cursor-pointer" />
                         : ''
                     }
-                    <ThemeToggle />
                     <button className="text-2xl" onClick={() => setOpen(!open)}>
                         {open ? <FaTimes /> : <FaBars />}
                     </button>

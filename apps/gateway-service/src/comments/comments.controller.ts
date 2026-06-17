@@ -45,12 +45,22 @@ export class CommentsController {
       postAuthorId: Number(post.authorId) 
     };
 
-    console.log('PAYLOAD ENVIADO:', payload);
-
     return firstValueFrom(
       this.commentsClient.send('comments.create', payload),
     );
   }
+
+  @Get('latest/:authorId')
+    latestComments(
+      @Param('authorId') authorId: string,
+    ) {
+      return firstValueFrom(
+        this.commentsClient.send(
+          'comments.latestForAuthor',
+          Number(authorId),
+        ),
+      );
+    }
 
   @Get('/:postId')
   async getComments(@Param('postId') postId: string): Promise<any> {
