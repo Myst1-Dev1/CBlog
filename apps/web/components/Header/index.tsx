@@ -58,7 +58,7 @@ export function Header() {
                         }} className="cursor-pointer transition-all duration-500 hover:text-orange-400 hover:scale-110" />
                     </div>
                     :
-                    <div className="flex items-center ml-auto">
+                    <div className="flex items-center gap-4 ml-auto">
                         {/* <ThemeToggle /> */}
                         <span onClick={() => { setIsModalOpen(true); setFormType('signIn') }} className="p-3 font-semibold transition-all duration-500 rounded-md cursor-pointer hover:bg-orange-500 hover:text-white">Login</span>
                         <button onClick={() => { setIsModalOpen(true); setFormType('signUp') }} className="bg-orange-400 text-white w-fit p-3 rounded-md font-semibold cursor-pointer transition-all text-black duration-500 hover:bg-orange-500 hover:text-white hover:scale-105">Cadastro</button>

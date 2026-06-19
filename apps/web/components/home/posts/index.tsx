@@ -7,7 +7,6 @@ import { FaArrowRight } from "react-icons/fa";
 import gsap from "gsap";
 import { Post } from "../../../@types/Post";
 import { useGSAPAnimate } from "../../../hooks/useGSAPAnimate";
-import { useTheme } from "../../../hooks/useTheme";
 import { useUserStore } from "../../../hooks/user/useUserStore";
 import { ANIM_CONFIG } from "../../../utils/gsapConfig";
 import { PostCard } from "../../postCard";
@@ -17,10 +16,8 @@ interface PostsProps {
 }
 
 export function Posts({ data }: PostsProps) {
-  const { theme } = useTheme();
   const { users } = useUserStore();
   const sectionRef = useRef<HTMLElement>(null);
-  const isDark = theme === "dark";
 
   const recentPosts = useMemo(
     () =>
@@ -32,6 +29,15 @@ export function Posts({ data }: PostsProps) {
       }),
     [data]
   );
+
+  const htmlToText = (html: string) => {
+    if (!html) return "";
+
+    const div = document.createElement("div");
+    div.innerHTML = html;
+
+    return div.textContent || div.innerText || "";
+  };
 
   const featuredPost = recentPosts[0];
   const morePosts = recentPosts.slice(1);
@@ -89,10 +95,7 @@ export function Posts({ data }: PostsProps) {
     <section
       id="latest-posts"
       ref={sectionRef}
-      className={`relative overflow-hidden px-4 py-12 transition-colors duration-300 md:py-16 ${
-        isDark
-          ? "bg-[linear-gradient(180deg,_rgba(12,10,9,0.98),_rgba(23,17,13,0.94))]"
-          : "bg-[linear-gradient(180deg,_#fff5ea,_#fff9f3)]"
+      className={`relative overflow-hidden px-4 py-12 transition-colors duration-300 md:py-16 bg-[linear-gradient(180deg,_rgba(12,10,9,0.98),_rgba(23,17,13,0.94))]
       }`}
     >
       <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#E58E35]/10 to-transparent" />
@@ -107,7 +110,7 @@ export function Posts({ data }: PostsProps) {
               <h2 className="text-3xl font-black tracking-tight text-[#7a4308] sm:text-4xl lg:text-5xl dark:text-amber-100">
                 Leituras recentes com cara de capa principal
               </h2>
-              <p className={`max-w-xl text-base leading-relaxed ${isDark ? "text-stone-400" : "text-[#5d4b3d]"}`}>
+              <p className={`max-w-xl text-base leading-relaxed text-stone-400`}>
                 A curadoria do CorgiBlog ganhou uma apresentação mais cinematográfica: o post mais recente vira destaque e o restante entra em uma grade fluida, pronta para explorar.
               </p>
             </div>
@@ -151,8 +154,8 @@ export function Posts({ data }: PostsProps) {
                     <h3 className="text-2xl font-black leading-tight text-[#6f3c07] dark:text-white md:text-3xl">
                       {featuredPost.title}
                     </h3>
-                    <p className={`text-sm leading-relaxed ${isDark ? "text-stone-400" : "text-stone-600"}`}>
-                      {featuredPost.description}
+                    <p className={`text-sm leading-relaxed text-stone-400 line-clamp-3`}>
+                      {htmlToText(featuredPost.description)}
                     </p>
                   </div>
                 </div>
@@ -161,7 +164,7 @@ export function Posts({ data }: PostsProps) {
                   <span className="rounded-full border border-[#E58E35]/15 bg-[#E58E35]/10 px-3 py-1 text-xs font-semibold text-[#8E4F00] dark:text-amber-200">
                     {featuredPost.category}
                   </span>
-                  <span className={`text-xs font-medium ${isDark ? "text-stone-500" : "text-stone-500"}`}>
+                  <span className={`text-xs font-medium text-stone-500`}>
                     Última atualização da home
                   </span>
                 </div>
@@ -188,7 +191,7 @@ export function Posts({ data }: PostsProps) {
         ) : (
           <div className="rounded-[34px] border border-dashed border-[#E58E35]/25 bg-white/70 p-10 text-center backdrop-blur dark:bg-stone-900/50">
             <p className="text-lg font-bold text-[#6f3c07] dark:text-amber-100">Nenhum post encontrado</p>
-            <p className={`mt-2 text-sm ${isDark ? "text-stone-400" : "text-stone-500"}`}>
+            <p className={`mt-2 text-sm text-stone-400`}>
               Quando houver conteúdo novo, ele aparece aqui com um destaque especial.
             </p>
           </div>

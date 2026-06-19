@@ -5,4 +5,5 @@ export type Post = {
     category: string;
     description: string;
     postImageUrl: string;
+    createdAt: string;
 }
