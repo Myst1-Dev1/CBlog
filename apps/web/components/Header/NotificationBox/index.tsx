@@ -8,11 +8,7 @@ import { useNotifications } from "../../../hooks/useNotifications";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-interface NotificationBoxProps {
-    theme: string;
-}
-
-export function NotificationBox({ theme }: NotificationBoxProps) {
+export function NotificationBox() {
     const { user, users } = useUserStore();
 
     const { notifications, markAllAsRead } = useNotifications(user?.id);
@@ -40,10 +36,9 @@ export function NotificationBox({ theme }: NotificationBoxProps) {
             <button
                 onClick={() => setIsNotificationBoxOpen(true)}
                 className={`
-                    relative cursor-pointer p-2.5 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500
-                    ${theme === 'light' 
-                    ? 'bg-zinc-900 text-white hover:bg-zinc-800' 
-                    : 'bg-white text-zinc-900 hover:bg-zinc-100 shadow-sm'
+                    relative cursor-pointer p-0 aspect-square w-7.5 h-7.5 grid place-items-center rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500
+                    
+                    bg-white text-zinc-900 hover:bg-zinc-100 shadow-sm
                     }
                 `}
                 aria-label="Notificações"
@@ -51,7 +46,7 @@ export function NotificationBox({ theme }: NotificationBoxProps) {
                 <FaBell className="w-5 h-5 transition-transform duration-300 hover:rotate-12" />
 
                 {notifications && notifications.filter(n => !n.read).length > 0 && (
-                    <span className="absolute -top-1 -right-1 flex h-5 w-5">
+                    <span className="absolute -top-2 -right-1 flex h-5 w-5">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                     
                     <span className="relative flex rounded-full h-5 w-5 bg-red-600 text-[11px] font-bold text-white items-center justify-center shadow-sm">

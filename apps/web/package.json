@@ -12,8 +12,12 @@
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.1",
+    "@react-three/postprocessing": "^3.0.4",
     "@repo/ui": "*",
     "@tailwindcss/postcss": "^4.1.18",
+    "@types/three": "^0.184.1",
     "gsap": "^3.14.2",
     "js-cookie": "^3.0.5",
     "next": "16.1.0",
@@ -27,6 +31,7 @@
     "suneditor-react": "^3.6.1",
     "swiper": "^12.1.0",
     "tailwindcss": "^4.1.18",
+    "three": "^0.184.0",
     "zustand": "^5.0.11"
   },
   "devDependencies": {

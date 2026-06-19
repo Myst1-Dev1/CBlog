@@ -1,191 +1,170 @@
 'use client';
 
-import { useRef, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
-
-import { Swiper, SwiperSlide } from 'swiper/react';
-import type { Swiper as SwiperType } from 'swiper';
-
-import 'swiper/css';
-import { usePostStore } from "../../../hooks/posts/usePostStore";
-import { useUserStore } from "../../../hooks/user/useUserStore";
-import { useGSAPAnimate } from "../../../hooks/useGSAPAnimate";
+import Image from "next/image";
+import { useRef } from "react";
 import gsap from "gsap";
-import { ANIM_CONFIG } from "../../../utils/gsapConfig";
+import { useGSAPAnimate } from "../../../hooks/useGSAPAnimate";
 
 export function Intro() {
-  const swiperRef = useRef<SwiperType | null>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const rootRef = useRef<HTMLElement>(null);
 
-  const { post } = usePostStore();
-  const { users } = useUserStore();
-
-  const authorIds = new Set(post?.map(p => p.authorId));
-  const postsData = post?.slice(0, 3) || [];
-  const slidesCount = postsData.length;
-
-  const authors = users?.filter(user =>
-    authorIds.has(user.id)
-  );
-  
   useGSAPAnimate(() => {
-    const activeSlide = document.querySelector('.swiper-slide-active .intro-content');
-    if (activeSlide) {
-      gsap.fromTo(activeSlide.querySelectorAll('.animate-item'),
-        {
-          y: 40,
-          opacity: 0
-        },
-        {
-          y: 0,
-          opacity: 1,
-          duration: ANIM_CONFIG.duration.medium,
-          stagger: 0.15,
-          ease: ANIM_CONFIG.easing.base,
-          clearProps: "all"
-        }
-      );
-    }
-  }, [activeIndex, slidesCount]);
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+      tl.from(".intro-kicker", { y: 18, opacity: 0, duration: 0.5 })
+        .from(
+          ".intro-title span",
+          {
+            y: 26,
+            opacity: 0,
+            duration: 0.7,
+            stagger: 0.08,
+          },
+          "-=0.18"
+        )
+        .from(".intro-copy", { y: 18, opacity: 0, duration: 0.5 }, "-=0.35")
+        .from(".intro-actions", { y: 16, opacity: 0, duration: 0.45 }, "-=0.3")
+        .from(
+          ".intro-stats > *",
+          {
+            y: 18,
+            opacity: 0,
+            duration: 0.45,
+            stagger: 0.08,
+          },
+          "-=0.25"
+        )
+        .from(".intro-visual", { x: 40, opacity: 0, duration: 0.75 }, "-=0.7")
+        .from(
+          ".intro-visual-float",
+          {
+            scale: 0.85,
+            opacity: 0,
+            duration: 0.55,
+            stagger: 0.12,
+          },
+          "-=0.45"
+        );
+
+      gsap.to(".intro-orb", {
+        y: -14,
+        duration: 3.8,
+        ease: "sine.inOut",
+        yoyo: true,
+        repeat: -1,
+        stagger: 0.4,
+      });
+    }, rootRef);
+
+    return () => ctx.revert();
+  }, [], rootRef);
 
   return (
-    <section className="relative overflow-hidden">
-      <Swiper
-        slidesPerView={1}
-        speed={800}
-        onSwiper={(swiper) => {
-          swiperRef.current = swiper;
-        }}
-        onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
-      >
-       {!postsData || postsData.length === 0 ? (
-        <SwiperSlide>
-          <div className="flex items-end justify-center relative w-full min-h-dvh lg:min-h-screen"
-            style={{
-              backgroundImage: "url('/images/corgi.webp')",
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-          >
-            <div className="absolute inset-0 z-10 bg-linear-to-b from-black/70 to-transparent" />
+    <section
+      ref={rootRef}
+      className={`bg-[radial-gradient(circle_at_top_left,_rgba(245,158,11,0.14),_transparent_35%),linear-gradient(180deg,_rgba(28,25,23,0.92),_rgba(12,10,9,0.98))] relative z-10 overflow-hidden px-4 py-10 transition-colors duration-300 md:py-14`}
+    >
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="intro-orb absolute -left-10 top-6 h-32 w-32 rounded-full bg-[#E58E35]/20 blur-3xl" />
+        <div className="intro-orb absolute right-0 top-28 h-40 w-40 rounded-full bg-amber-300/20 blur-3xl" />
+      </div>
 
-            <div className="container flex items-end justify-end min-h-screen py-12 z-20">
-              <div className="intro-content text-white flex justify-between flex-wrap gap-7 lg:gap-0 items-center w-full">
-                <div className="max-w-md w-full flex flex-col gap-4">
-                  <span className="w-fit px-2 py-1 bg-zinc-600 rounded-full font-medium shadow-lg text-sm">
-                    Sem conteúdo
-                  </span>
+      <div className="container relative z-10 mx-auto grid items-center gap-10 lg:grid-cols-12 lg:gap-14">
+        <div className="lg:col-span-6 xl:col-span-7 space-y-8">
+          <span className="intro-kicker inline-flex w-fit items-center gap-2 rounded-full border border-[#E58E35]/20 bg-white/70 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.35em] text-[#8E4F00] shadow-sm backdrop-blur dark:bg-stone-900/60 dark:text-amber-200">
+            Clube dos Patas Curtas
+          </span>
 
-                  <h2 className="font-bold text-3xl lg:text-4xl leading-tight">
-                    Nenhum post encontrado por aqui ainda
-                  </h2>
+          <div className="space-y-5">
+            <h1 className="intro-title max-w-2xl text-4xl font-black leading-[0.95] tracking-tight text-[#6f3c07] sm:text-5xl lg:text-7xl dark:text-amber-100">
+              <span className="block">Onde cada passo</span>
+              <span className="mt-2 block bg-gradient-to-r from-[#E58E35] via-[#f2a34f] to-[#8E4F00] bg-clip-text text-transparent">
+                corre em direção à alegria
+              </span>
+            </h1>
 
-                  <p className="text-sm lg:text-base font-light opacity-90">
-                    Parece que nosso feed está vazio no momento. Crie uma publicação para começar a povoar este carrossel!
+            <p className="intro-copy max-w-xl text-base leading-relaxed text-[#5b4a3d] sm:text-lg dark:text-stone-300">
+              Bem-vindo ao CorgiCloud, o refúgio definitivo para entusiastas de Pembroke e Cardigan.
+              Explore histórias, curiosidades e guias práticos em uma experiência mais editorial, mais viva e feita para prender o olhar.
+            </p>
+          </div>
+
+          <div className="intro-actions flex flex-wrap items-center gap-4">
+            <Link
+              href="#latest-posts"
+              className="inline-flex items-center justify-center rounded-2xl bg-[#E58E35] px-6 py-3 text-sm font-bold text-white shadow-[0_16px_32px_rgba(229,142,53,0.24)] transition-transform duration-300 hover:-translate-y-0.5 hover:bg-[#d97a16]"
+            >
+              Explorar postagens
+            </Link>
+            <Link
+              href="/posts"
+              className="inline-flex items-center justify-center rounded-2xl border border-[#E58E35]/20 bg-white/60 px-6 py-3 text-sm font-bold text-[#8E4F00] backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:border-[#E58E35]/40 hover:bg-white dark:bg-stone-900/40 dark:text-amber-100"
+            >
+              Ver arquivo completo
+            </Link>
+          </div>
+
+          <div className="intro-stats grid gap-3 sm:grid-cols-2">
+            <div className="rounded-3xl border border-white/60 bg-white/80 p-4 shadow-[0_12px_36px_rgba(119,74,21,0.08)] backdrop-blur dark:border-stone-800/70 dark:bg-stone-900/70">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#a56a22] dark:text-amber-300">Leitura</p>
+              <p className="mt-2 text-2xl font-black text-[#6f3c07] dark:text-white">3 min</p>
+              <p className="mt-1 text-sm text-[#6d5b4d] dark:text-stone-400">posts rápidos e diretos ao ponto</p>
+            </div>
+            <div className="rounded-3xl border border-white/60 bg-white/80 p-4 shadow-[0_12px_36px_rgba(119,74,21,0.08)] backdrop-blur dark:border-stone-800/70 dark:bg-stone-900/70">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#a56a22] dark:text-amber-300">Conteúdo</p>
+              <p className="mt-2 text-2xl font-black text-[#6f3c07] dark:text-white">Histórias</p>
+              <p className="mt-1 text-sm text-[#6d5b4d] dark:text-stone-400">guia, cultura e cuidado em um só lugar</p>
+            </div>
+            {/* <div className="rounded-3xl border border-white/60 bg-white/80 p-4 shadow-[0_12px_36px_rgba(119,74,21,0.08)] backdrop-blur dark:border-stone-800/70 dark:bg-stone-900/70">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#a56a22] dark:text-amber-300">Estilo</p>
+              <p className="mt-2 text-2xl font-black text-[#6f3c07] dark:text-white">GSAP</p>
+              <p className="mt-1 text-sm text-[#6d5b4d] dark:text-stone-400">animações suaves e com personalidade</p>
+            </div> */}
+          </div>
+        </div>
+
+        <div className="intro-visual relative mx-auto w-full max-w-[560px] lg:col-span-6 xl:col-span-5">
+          <div className="absolute -left-6 top-10 h-24 w-24 rounded-full border border-[#E58E35]/20 bg-white/50 backdrop-blur dark:bg-stone-900/40" />
+
+          <div className="relative overflow-hidden rounded-[36px] border border-white/60 bg-white p-3 shadow-[0_24px_80px_rgba(119,74,21,0.16)] dark:border-stone-800/70 dark:bg-stone-900/70">
+            <div className="absolute inset-x-6 top-6 h-28 rounded-full bg-gradient-to-r from-[#E58E35]/25 via-amber-200/20 to-transparent blur-2xl" />
+            <div className="relative overflow-hidden rounded-[28px]">
+              <Image
+                src="/images/Happy-Corgi.webp"
+                width={700}
+                height={760}
+                alt="foto de um corgi feliz"
+                className="h-[420px] w-full object-cover sm:h-[500px]"
+                priority
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
+
+              <div className="intro-visual-float absolute left-4 top-4 rounded-2xl border border-white/50 bg-white/80 px-4 py-3 text-sm font-semibold text-[#6f3c07] shadow-lg backdrop-blur dark:border-stone-700/50 dark:bg-stone-950/75 dark:text-amber-100">
+                Novo destaque da semana
+              </div>
+
+              <div className="intro-visual-float absolute bottom-4 left-4 right-4 grid gap-3 sm:grid-cols-[1.4fr_0.9fr]">
+                <div className="rounded-3xl bg-stone-950/75 p-4 text-white shadow-[0_12px_28px_rgba(0,0,0,0.18)] backdrop-blur">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-amber-300">
+                    Aula rápida
+                  </p>
+                  <p className="mt-2 text-lg font-black leading-tight">
+                    História, saúde e curiosidades com uma leitura mais imersiva.
                   </p>
                 </div>
-
-                <div className="flex flex-col gap-3">
-                  <div className="flex items-center gap-5">
-                    <Image
-                      src="/images/user.jpg"
-                      width={200}
-                      height={200}
-                      className="w-14 h-14 rounded-full object-cover border-2 border-white/20"
-                      alt="foto padrão"
-                    />
-                    <h3 className="font-semibold text-lg">Sistema</h3>
-                  </div>
-                  <span className="text-sm font-light opacity-80">
-                    Nenhum registro
-                  </span>
+                <div className="rounded-3xl bg-white/85 p-4 text-[#6f3c07] backdrop-blur dark:bg-stone-950/75 dark:text-amber-100">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-[#a56a22] dark:text-amber-300">
+                    Temperamento
+                  </p>
+                  <p className="mt-2 text-3xl font-black">100%</p>
+                  <p className="text-sm text-[#6d5b4d] dark:text-stone-300">fofo e convincente</p>
                 </div>
               </div>
             </div>
           </div>
-        </SwiperSlide>
-      ) : (
-        /* ================= SEU MAP ORIGINAL SE HOUVER DADOS ================= */
-        postsData.map(data => {
-          const author = authors?.find(
-            (author) => author.id === data.authorId
-          );
-          return (
-            <SwiperSlide key={data.id}>
-              <div className="flex items-end justify-center relative w-full min-h-dvh lg:min-h-screen"
-                style={{
-                  // Troquei de ?? para || para garantir que strings vazias '' também peguem o corgi
-                  backgroundImage: `url(${data.postImageUrl || '/images/corgi.webp'})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                }}
-              >
-                <div className="absolute inset-0 z-10 bg-linear-to-b from-black/70 to-transparent" />
-
-                <div className="container flex items-end justify-end min-h-screen py-12 z-20">
-                  <div className="intro-content text-white flex justify-between flex-wrap gap-7 lg:gap-0 items-center w-full">
-                    <div className="max-w-md w-full flex flex-col gap-4">
-                      <span className="animate-item w-fit px-2 py-1 bg-orange-400 rounded-full font-medium shadow-lg">
-                        {data.category}
-                      </span>
-
-                      <h2 className="animate-item font-bold text-3xl lg:text-4xl leading-tight">
-                        {data.title}
-                      </h2>
-
-                      <div
-                        className="animate-item line-clamp-2 text-sm lg:text-base font-light opacity-90"
-                        dangerouslySetInnerHTML={{ __html: data.description }}
-                      />
-
-                      <Link
-                        href={`/post/${data.id}`}
-                        className="animate-item grid place-items-center w-fit h-12 rounded-full px-8 bg-white text-black font-bold transition-all duration-300 hover:bg-orange-500 hover:text-white hover:scale-105 active:scale-95 shadow-lg"
-                      >
-                        Ver Mais
-                      </Link>
-                    </div>
-
-                    <div className="flex flex-col gap-3 animate-item">
-                      <div className="flex items-center gap-5">
-                        <Image
-                          src={author?.avatarUrl || "/images/user.jpg"}
-                          width={200}
-                          height={200}
-                          className="w-14 h-14 rounded-full object-cover border-2 border-white/20"
-                          alt="foto do usuário"
-                        />
-                        {/* Fallback de nome se o autor não for encontrado */}
-                        <h3 className="font-semibold text-lg">{author?.username || "Autor Anônimo"}</h3>
-                      </div>
-
-                      <span className="text-sm font-light opacity-80">
-                        24 de Janeiro de 2025
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </SwiperSlide>
-          )
-        })
-      )}
-      </Swiper>
-
-      <div className="absolute bottom-5 left-4 lg:left-10 z-30 flex items-center gap-3">
-        {Array.from({ length: slidesCount }).map((_, index) => (
-          <span
-            key={index}
-            onClick={() => swiperRef.current?.slideTo(index)}
-            className={`
-              w-3 h-3 rounded-full cursor-pointer transition-all duration-300
-              ${activeIndex === index
-                ? 'bg-orange-500 w-8'
-                : 'bg-white/50 hover:bg-white'}
-            `}
-          />
-        ))}
+        </div>
       </div>
     </section>
   );
