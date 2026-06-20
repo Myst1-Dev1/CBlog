@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useMemo, useRef, useState } from "react";
 import gsap from "gsap";
-import { useTheme } from "../../../hooks/useTheme";
 import { useGSAPAnimate } from "../../../hooks/useGSAPAnimate";
 import { ANIM_CONFIG } from "../../../utils/gsapConfig";
 
@@ -52,8 +51,6 @@ const racesData: RaceData[] = [
 ];
 
 export function Races() {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
   const [activeTab, setActiveTab] = useState("pembroke");
   const sectionRef = useRef<HTMLElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -126,10 +123,7 @@ export function Races() {
   return (
     <section
       ref={sectionRef}
-      className={`relative overflow-hidden px-4 py-20 transition-colors duration-300 ${
-        isDark
-          ? "bg-[linear-gradient(180deg,_rgba(12,10,9,1),_rgba(24,17,13,0.96))]"
-          : "bg-[linear-gradient(180deg,_#fff9f3,_#fff6ee)]"
+      className={`relative overflow-hidden px-4 py-20 transition-colors duration-300 bg-[linear-gradient(180deg,_rgba(12,10,9,1),_rgba(24,17,13,0.96))]
       }`}
     >
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -145,7 +139,7 @@ export function Races() {
           <h2 className="text-3xl font-black tracking-tight text-[#7a4308] sm:text-4xl lg:text-5xl dark:text-amber-100">
             Duas personalidades, um mesmo charme
           </h2>
-          <p className={`text-base leading-relaxed ${isDark ? "text-stone-400" : "text-[#5d4b3d]"}`}>
+          <p className={`text-base leading-relaxed text-stone-400`}>
             O painel agora funciona como uma vitrine editorial. A troca de raça anima o conteúdo para dar sensação de catálogo vivo, não de formulário estático.
           </p>
         </div>
@@ -158,9 +152,8 @@ export function Races() {
               className={`rounded-2xl px-5 py-3 text-sm font-bold transition-all duration-300 ${
                 activeTab === race.id
                   ? "bg-[#E58E35] text-white shadow-[0_14px_30px_rgba(229,142,53,0.22)]"
-                  : isDark
-                  ? "bg-stone-900/70 text-stone-300 hover:text-white"
-                  : "bg-white/80 text-stone-600 hover:bg-white hover:text-[#6f3c07]"
+                  : 
+                  "bg-stone-900/70 text-stone-300 hover:text-white"
               }`}
             >
               {race.name}
@@ -170,11 +163,7 @@ export function Races() {
 
         <div
           ref={panelRef}
-          className={`races-panel overflow-hidden rounded-[36px] border p-6 md:p-10 ${
-            isDark
-              ? "border-stone-800/70 bg-stone-950/60 backdrop-blur"
-              : "border-white/70 bg-white/85 shadow-[0_24px_80px_rgba(119,74,21,0.08)] backdrop-blur"
-          }`}
+          className={`races-panel overflow-hidden rounded-[36px] border p-6 md:p-10 border-stone-800/70 bg-stone-950/60 backdrop-blur}`}
         >
           <div className="grid items-center gap-8 lg:grid-cols-12">
             <div className="race-dynamic lg:col-span-5">
@@ -198,7 +187,7 @@ export function Races() {
                 <span className="rounded-full border border-[#E58E35]/15 bg-[#E58E35]/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.25em] text-[#8E4F00] dark:text-amber-200">
                   {currentRace.type}
                 </span>
-                <span className={`text-xs font-semibold uppercase tracking-[0.25em] ${isDark ? "text-stone-500" : "text-stone-400"}`}>
+                <span className={`text-xs font-semibold uppercase tracking-[0.25em] text-stone-500`}>
                   perfil ativo
                 </span>
               </div>
@@ -206,7 +195,7 @@ export function Races() {
               <div className="space-y-2">
                 <h3 className="text-3xl font-black text-[#6f3c07] dark:text-white">{currentRace.name}</h3>
                 <p className="text-lg font-semibold text-[#E58E35]">{currentRace.tagline}</p>
-                <p className={`max-w-2xl text-sm leading-relaxed ${isDark ? "text-stone-400" : "text-stone-600"}`}>
+                <p className={`max-w-2xl text-sm leading-relaxed text-stone-400`}>
                   {currentRace.description}
                 </p>
               </div>
@@ -215,13 +204,10 @@ export function Races() {
                 {currentRace.stats.map((stat) => (
                   <div
                     key={stat.label}
-                    className={`rounded-[24px] border p-4 text-center ${
-                      isDark
-                        ? "border-stone-800 bg-stone-900/80"
-                        : "border-white/70 bg-white/80"
+                    className={`rounded-[24px] border p-4 text-center border-stone-800 bg-stone-900/80
                     }`}
                   >
-                    <span className={`block text-xs font-medium uppercase tracking-[0.25em] ${isDark ? "text-stone-500" : "text-stone-400"}`}>
+                    <span className={`block text-xs font-medium uppercase tracking-[0.25em] text-stone-500`}>
                       {stat.label}
                     </span>
                     <span className="mt-2 block text-2xl font-black text-[#E58E35]">{stat.value}</span>

@@ -1,9 +1,12 @@
 'use client';
 
+import { useMemo, useState } from 'react';
+
 import { FaArrowLeft, FaArrowRight, FaSearch } from "react-icons/fa";
 import { Post } from "../../@types/Post";
 import { useUserStore } from "../../hooks/user/useUserStore";
 import { PostCard } from "../postCard";
+import { usePagination } from "../../hooks/usePagination";
 
 interface PostsContentProps {
   data: Post[];
@@ -11,6 +14,33 @@ interface PostsContentProps {
 
 export function PostsContent({ data }: PostsContentProps) {
   const { users } = useUserStore();
+  
+  const [search, setSearch] = useState("");
+
+  const filteredPosts = useMemo(() => {
+    return data.filter((post) => {
+      const normalizedSearch = search.toLowerCase();
+
+      return (
+        post.title?.toLowerCase().includes(normalizedSearch) ||
+        post.description?.toLowerCase().includes(normalizedSearch) ||
+        post.category?.toLowerCase().includes(normalizedSearch)
+      );
+    });
+  }, [data, search]);
+  
+  const {
+    prevPage,
+    nextPage,
+    totalPages,
+    paginatedItems,
+    paginationRange,
+    currentPage,
+    goToPage,
+  } = usePagination({
+    items: filteredPosts,
+    itemsPerPage: 6,
+  });
 
   const authorIds = new Set(data?.map((post: any) => post.authorId));
   const authors = users?.filter((user) => authorIds.has(user.id));
@@ -42,6 +72,8 @@ export function PostsContent({ data }: PostsContentProps) {
                 <FaSearch className="shrink-0 text-[#a56a22] dark:text-amber-300" />
                 <input
                   type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                   className="w-full bg-transparent text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--text-muted)] dark:placeholder:text-stone-500"
                   placeholder="Pesquise aqui..."
                 />
@@ -76,7 +108,7 @@ export function PostsContent({ data }: PostsContentProps) {
         </div>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-          {data.map((post) => {
+          {paginatedItems.map((post) => {
             const author = authors?.find((item) => item.id === post.authorId);
 
             return (
@@ -87,33 +119,51 @@ export function PostsContent({ data }: PostsContentProps) {
 
         <div className="flex items-center justify-center gap-2 py-6 select-none">
           <button
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-[#E58E35]/15 bg-white text-[#5d4b3d] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#E58E35]/30 hover:text-[#8E4F00] dark:border-stone-800 dark:bg-stone-900 dark:text-stone-300 dark:hover:border-amber-400/20 dark:hover:text-amber-200"
+            onClick={prevPage}
+            disabled={currentPage === 1}
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-[#E58E35]/15 bg-white text-[#5d4b3d] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#E58E35]/30 hover:text-[#8E4F00] disabled:cursor-not-allowed disabled:opacity-40 dark:border-stone-800 dark:bg-stone-900 dark:text-stone-300 dark:hover:border-amber-400/20 dark:hover:text-amber-200"
             aria-label="Página anterior"
           >
             <FaArrowLeft className="text-sm" />
           </button>
 
+          {paginationRange.map((item, index) => {
+            if (item === "...") {
+              return (
+                <span
+                  key={index}
+                  className="flex h-11 min-w-11 items-center justify-center rounded-full border border-dashed border-[#E58E35]/20 bg-white px-4 font-semibold text-[#8E4F00] dark:border-stone-800 dark:bg-stone-900 dark:text-amber-200"
+                >
+                  ...
+                </span>
+              );
+            }
+
+            const isActive = currentPage === item;
+
+            return (
+              <button
+                key={index}
+                onClick={() => goToPage(Number(item))}
+                aria-current={isActive ? "page" : undefined}
+                className={`flex h-11 min-w-11 items-center justify-center rounded-full px-4 font-semibold transition-all duration-300
+                  
+                  ${
+                    isActive
+                      ? "bg-[#8E4F00] font-bold text-white shadow-[0_16px_30px_rgba(142,79,0,0.18)] dark:bg-amber-500 dark:text-stone-950"
+                      : "border border-[#E58E35]/15 bg-white text-[#5d4b3d] hover:-translate-y-0.5 hover:border-[#E58E35]/30 hover:text-[#8E4F00] dark:border-stone-800 dark:bg-stone-900 dark:text-stone-300 dark:hover:border-amber-400/20 dark:hover:text-amber-200"
+                  }
+                `}
+              >
+                {item}
+              </button>
+            );
+          })}
+
           <button
-            className="flex h-11 min-w-11 items-center justify-center rounded-full bg-[#8E4F00] px-4 font-bold text-white shadow-[0_16px_30px_rgba(142,79,0,0.18)] dark:bg-amber-500 dark:text-stone-950"
-            aria-current="page"
-          >
-            1
-          </button>
-
-          <button className="flex h-11 min-w-11 items-center justify-center rounded-full border border-[#E58E35]/15 bg-white px-4 font-semibold text-[#5d4b3d] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#E58E35]/30 hover:text-[#8E4F00] dark:border-stone-800 dark:bg-stone-900 dark:text-stone-300 dark:hover:border-amber-400/20 dark:hover:text-amber-200">
-            2
-          </button>
-
-          <span className="flex h-11 min-w-11 items-center justify-center rounded-full border border-dashed border-[#E58E35]/20 bg-white px-4 font-semibold text-[#8E4F00] dark:border-stone-800 dark:bg-stone-900 dark:text-amber-200">
-            ...
-          </span>
-
-          <button className="flex h-11 min-w-11 items-center justify-center rounded-full border border-[#E58E35]/15 bg-white px-4 font-semibold text-[#5d4b3d] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#E58E35]/30 hover:text-[#8E4F00] dark:border-stone-800 dark:bg-stone-900 dark:text-stone-300 dark:hover:border-amber-400/20 dark:hover:text-amber-200">
-            12
-          </button>
-
-          <button
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-[#E58E35]/15 bg-white text-[#5d4b3d] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#E58E35]/30 hover:text-[#8E4F00] dark:border-stone-800 dark:bg-stone-900 dark:text-stone-300 dark:hover:border-amber-400/20 dark:hover:text-amber-200"
+            onClick={nextPage}
+            disabled={currentPage === totalPages}
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-[#E58E35]/15 bg-white text-[#5d4b3d] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#E58E35]/30 hover:text-[#8E4F00] disabled:cursor-not-allowed disabled:opacity-40 dark:border-stone-800 dark:bg-stone-900 dark:text-stone-300 dark:hover:border-amber-400/20 dark:hover:text-amber-200"
             aria-label="Próxima página"
           >
             <FaArrowRight className="text-sm" />

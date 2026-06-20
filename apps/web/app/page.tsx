@@ -1,6 +1,5 @@
 'use server';
 
-import { BlogAuthor } from "../components/home/blogAuthor";
 import { HealthFood } from "../components/home/healthFood";
 import { History } from "../components/home/history";
 import { Intro } from "../components/home/Intro";
@@ -20,7 +19,7 @@ export default async function Home() {
         <History />
         <Races />
         <HealthFood />
-        <BlogAuthor />
+        {/* <BlogAuthor /> */}
         <Posts data={data} />
       </div>
     </main>

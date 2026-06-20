@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useRef } from "react";
 import gsap from "gsap";
-import { useTheme } from "../../../hooks/useTheme";
 import { useGSAPAnimate } from "../../../hooks/useGSAPAnimate";
 import { ANIM_CONFIG } from "../../../utils/gsapConfig";
 
@@ -26,8 +25,6 @@ const tips = [
 ];
 
 export function HealthFood() {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
   const sectionRef = useRef<HTMLElement>(null);
 
   useGSAPAnimate(() => {
@@ -79,10 +76,7 @@ export function HealthFood() {
   return (
     <section
       ref={sectionRef}
-      className={`relative overflow-hidden px-4 py-20 transition-colors duration-300 ${
-        isDark
-          ? "bg-[linear-gradient(180deg,_rgba(11,9,8,1),_rgba(23,16,12,0.96))]"
-          : "bg-[linear-gradient(180deg,_#fffaf3,_#fff5ea)]"
+      className={`relative overflow-hidden px-4 py-20 transition-colors duration-300 bg-[linear-gradient(180deg,_rgba(11,9,8,1),_rgba(23,16,12,0.96))]
       }`}
     >
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -98,15 +92,12 @@ export function HealthFood() {
           <h2 className="text-3xl font-black tracking-tight text-[#7a4308] sm:text-4xl lg:text-5xl dark:text-amber-100">
             Alimentação saudável com foco em bem-estar real
           </h2>
-          <p className={`text-base leading-relaxed ${isDark ? "text-stone-400" : "text-[#5d4b3d]"}`}>
+          <p className={`text-base leading-relaxed text-stone-400`}>
             Uma seção mais editorial para lembrar que saúde começa na rotina. Visual limpo, dicas objetivas e um destaque visual para fixar a mensagem.
           </p>
         </div>
 
-        <div className={`grid items-center gap-8 overflow-hidden rounded-[36px] border p-6 md:p-10 lg:grid-cols-12 ${
-          isDark
-            ? "border-stone-800/70 bg-stone-950/60 backdrop-blur"
-            : "border-white/70 bg-white/85 shadow-[0_24px_80px_rgba(119,74,21,0.08)] backdrop-blur"
+        <div className={`grid items-center gap-8 overflow-hidden rounded-[36px] border p-6 md:p-10 lg:grid-cols-12 border-stone-800/70 bg-stone-950/60 backdrop-blur
         }`}>
           <div className="lg:col-span-7 space-y-4">
             {tips.map((tip, index) => (
@@ -114,10 +105,7 @@ export function HealthFood() {
                 key={tip.title}
                 className="food-tip flex items-start gap-4 rounded-[28px] border border-white/60 bg-white/80 p-4 shadow-[0_12px_28px_rgba(119,74,21,0.06)] dark:border-stone-800/70 dark:bg-stone-900/65"
               >
-                <div className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl text-xl ${
-                  isDark
-                    ? "bg-stone-950 text-amber-300"
-                    : "bg-[#E58E35]/10 text-[#E58E35]"
+                <div className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl text-xl bg-stone-950 text-amber-300
                 }`}>
                   {tip.icon}
                 </div>
@@ -128,7 +116,7 @@ export function HealthFood() {
                     </span>
                     <h3 className="text-lg font-black text-[#6f3c07] dark:text-white">{tip.title}</h3>
                   </div>
-                  <p className={`text-sm leading-relaxed ${isDark ? "text-stone-400" : "text-stone-600"}`}>
+                  <p className={`text-sm leading-relaxed text-stone-400`}>
                     {tip.text}
                   </p>
                 </div>

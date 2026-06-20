@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useRef } from "react";
 import gsap from "gsap";
-import { useTheme } from "../../../hooks/useTheme";
 import { useGSAPAnimate } from "../../../hooks/useGSAPAnimate";
 import { ANIM_CONFIG } from "../../../utils/gsapConfig";
 
@@ -14,8 +13,6 @@ const principles = [
 ];
 
 export function BlogAuthor() {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
   const sectionRef = useRef<HTMLElement>(null);
 
   useGSAPAnimate(() => {
@@ -56,10 +53,7 @@ export function BlogAuthor() {
   return (
     <section
       ref={sectionRef}
-      className={`relative overflow-hidden px-4 py-20 transition-colors duration-300 ${
-        isDark
-          ? "bg-[linear-gradient(180deg,_rgba(23,16,12,0.96),_rgba(11,9,8,1))]"
-          : "bg-[linear-gradient(180deg,_#fff5ea,_#fffaf3)]"
+      className={`relative overflow-hidden px-4 py-20 transition-colors duration-300 bg-[linear-gradient(180deg,_rgba(23,16,12,0.96),_rgba(11,9,8,1))]
       }`}
     >
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -68,15 +62,11 @@ export function BlogAuthor() {
       </div>
 
       <div className="container relative z-10 mx-auto max-w-7xl">
-        <div className={`grid items-center gap-10 overflow-hidden rounded-[36px] border p-6 md:p-10 lg:grid-cols-12 ${
-          isDark
-            ? "border-stone-800/70 bg-stone-950/60 backdrop-blur"
-            : "border-white/70 bg-white/85 shadow-[0_24px_80px_rgba(119,74,21,0.08)] backdrop-blur"
+        <div className={`grid items-center gap-10 overflow-hidden rounded-[36px] border p-6 md:p-10 lg:grid-cols-12 border-stone-800/70 bg-stone-950/60 backdrop-blur
         }`}>
           <div className="author-portrait lg:col-span-5">
           <div className="relative mx-auto w-full max-w-[420px]">
-            <div className={`absolute inset-0 translate-x-3 translate-y-3 rounded-[32px] ${
-              isDark ? "bg-stone-800/50" : "bg-[#E58E35]/10"
+            <div className={`absolute inset-0 translate-x-3 translate-y-3 rounded-[32px] bg-stone-800/50
             }`} />
               <div className="relative aspect-square overflow-hidden rounded-[32px] border border-white/70 shadow-[0_18px_50px_rgba(0,0,0,0.08)] dark:border-stone-800/70">
                 <Image
@@ -107,7 +97,7 @@ export function BlogAuthor() {
               <h2 className="text-3xl font-black tracking-tight text-[#7a4308] sm:text-4xl lg:text-5xl dark:text-amber-100">
                 Conheça John, o humano por trás do CorgiBlog
               </h2>
-              <p className={`text-base leading-relaxed ${isDark ? "text-stone-400" : "text-[#5d4b3d]"}`}>
+              <p className={`text-base leading-relaxed text-stone-400`}>
                 John é mais que um entusiasta. Ele organizou o CorgiCloud como um espaço para compartilhar história, cuidado e cultura com um tom caloroso e fácil de navegar.
               </p>
             </div>

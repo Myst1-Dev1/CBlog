@@ -2,7 +2,6 @@
 
 import { useRef } from "react";
 import gsap from "gsap";
-import { useTheme } from "../../../hooks/useTheme";
 import { useGSAPAnimate } from "../../../hooks/useGSAPAnimate";
 import { ANIM_CONFIG } from "../../../utils/gsapConfig";
 import { Corgi3D } from "./corgi3D";
@@ -29,8 +28,6 @@ const timeline = [
 ];
 
 export function History() {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
   const sectionRef = useRef<HTMLElement>(null);
 
   useGSAPAnimate(() => {
@@ -81,10 +78,7 @@ export function History() {
   return (
     <section
       ref={sectionRef}
-      className={`relative overflow-hidden px-4 py-20 transition-colors duration-300 ${
-        isDark
-          ? "bg-[linear-gradient(180deg,_rgba(18,14,11,0.96),_rgba(11,9,8,1))]"
-          : "bg-[linear-gradient(180deg,_#fff7ed,_#fffaf3)]"
+      className={`relative overflow-hidden px-4 py-20 transition-colors duration-300 bg-[linear-gradient(180deg,_rgba(18,14,11,0.96),_rgba(11,9,8,1))]
       }`}
     >
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -100,22 +94,19 @@ export function History() {
           <h2 className="text-3xl font-black tracking-tight text-[#7a4308] sm:text-4xl lg:text-5xl dark:text-amber-100">
             A origem do Corgi com uma leitura mais cinematográfica
           </h2>
-          <p className={`text-base leading-relaxed ${isDark ? "text-stone-400" : "text-[#5d4b3d]"}`}>
+          <p className={`text-base leading-relaxed text-stone-400`}>
             Uma linha do tempo mais expressiva, um modelo 3D em destaque e um ritmo visual que guia o olhar do mito à realeza.
           </p>
         </div>
 
         <div className="grid items-center gap-10 lg:grid-cols-12">
           <div className="history-figure lg:col-span-5">
-            <div className={`relative overflow-hidden rounded-[36px] border p-4 shadow-[0_24px_80px_rgba(119,74,21,0.12)] ${
-              isDark
-                ? "border-stone-800/70 bg-stone-950/60"
-                : "border-white/70 bg-white/85 backdrop-blur"
+            <div className={`relative overflow-hidden rounded-[36px] border p-4 shadow-[0_24px_80px_rgba(119,74,21,0.12)] border-stone-800/70 bg-stone-950/60
             }`}>
               <div className="absolute inset-x-6 top-6 h-28 rounded-full bg-gradient-to-r from-[#E58E35]/20 via-amber-200/20 to-transparent blur-2xl" />
-              {isDark && (
+              {/* {isDark && ( */}
                 <div className="absolute -right-6 top-10 h-28 w-28 rounded-full bg-amber-500/10 blur-3xl" />
-              )}
+              {/* // )} */}
               <div className="relative flex min-h-[460px] items-center justify-center">
                 <Corgi3D />
               </div>
@@ -129,10 +120,7 @@ export function History() {
                   key={item.era}
                   className="history-item group relative rounded-[28px] border border-white/60 bg-white/80 p-5 shadow-[0_12px_34px_rgba(119,74,21,0.08)] backdrop-blur transition-transform duration-300 hover:-translate-y-1 dark:border-stone-800/70 dark:bg-stone-900/65"
                 >
-                  <div className={`absolute -left-[38px] top-5 flex h-5 w-5 items-center justify-center rounded-full border-2 text-[10px] font-black ${
-                    isDark
-                      ? "border-amber-400 bg-stone-950 text-amber-300"
-                      : "border-[#E58E35] bg-white text-[#8E4F00]"
+                  <div className={`absolute -left-[38px] top-5 flex h-5 w-5 items-center justify-center rounded-full border-2 text-[10px] font-black border-amber-400 bg-stone-950 text-amber-300
                   }`} />
 
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -144,7 +132,7 @@ export function History() {
                         </span>
                       </div>
                       <h3 className="text-2xl font-black text-[#6f3c07] dark:text-white">{item.title}</h3>
-                      <p className={`max-w-2xl text-sm leading-relaxed ${isDark ? "text-stone-400" : "text-stone-600"}`}>
+                      <p className={`max-w-2xl text-sm leading-relaxed text-stone-400`}>
                         {item.text}
                       </p>
                     </div>

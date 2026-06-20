@@ -86,7 +86,7 @@ export function Intro() {
             </h1>
 
             <p className="intro-copy max-w-xl text-base leading-relaxed text-[#5b4a3d] sm:text-lg dark:text-stone-300">
-              Bem-vindo ao CorgiCloud, o refúgio definitivo para entusiastas de Pembroke e Cardigan.
+              Bem-vindo ao Corgi Blog, o refúgio definitivo para entusiastas de Pembroke e Cardigan.
               Explore histórias, curiosidades e guias práticos em uma experiência mais editorial, mais viva e feita para prender o olhar.
             </p>
           </div>

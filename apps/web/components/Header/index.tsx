@@ -36,7 +36,7 @@ export function Header() {
 
     return (
         <>
-            <header ref={headerRef} className={`relative z-50 lg:px-12 px-4 bg-black shadow-md shadow-orange-100 flex justify-between items-center py-6 text-white`}>
+            <header ref={headerRef} className={`relative z-50 lg:px-12 px-4 bg-black shadow-sm shadow-orange-100/70 flex justify-between items-center py-6 text-white`}>
                 <Link href="/" className="text-2xl font-bold hover:scale-105 transition-transform duration-300">Corgi Blog</Link>
 
                 {/* <nav className="hidden md:flex items-center gap-6">

@@ -30,12 +30,16 @@ export const useUserStore = create<UserState>((set) => ({
 
   fetchUserData: async () => {
     try {
-      set({ loading: true, error: null });
+      set({
+        loading: true,
+        error: null
+      });
 
       const userCookie = Cookies.get('user');
 
       if (!userCookie) {
-        throw new Error('Usuário não autenticado');
+        set({ loading: false });
+        return;
       }
 
       const parsedUser = JSON.parse(userCookie);
@@ -46,10 +50,16 @@ export const useUserStore = create<UserState>((set) => ({
           Authorization: `Bearer ${parsedUser.token}`,
         },
         cache: 'no-store'
-      });
+      }).catch(() => null);
+
+      if (!res) {
+        set({ loading: false });
+        return;
+      }
 
       if (!res.ok) {
-        throw new Error('Erro ao buscar usuário');
+        set({ loading: false });
+        return;
       }
 
       const data = await res.json();
@@ -58,32 +68,48 @@ export const useUserStore = create<UserState>((set) => ({
         user: data,
         loading: false,
       });
-    } catch (err: any) {
+
+    } catch {
       set({
         loading: false,
-        error: err.message || 'Erro inesperado',
       });
     }
   },
 
   fetchAllUsers: async () => {
-    set({ loading: true, error: null });
+    try {
+      set({
+        loading: true,
+        error: null
+      });
 
-    const res = await fetch(`${API_URL}auth/users`, {
-      method: 'GET',
-      cache: 'no-store',
-    });
+      const res = await fetch(`${API_URL}auth/users`, {
+        method: 'GET',
+        cache: 'no-store',
+      }).catch(() => null);
 
-    if (!res.ok) {
-      throw new Error('Erro ao buscar usuário');
+      if (!res) {
+        set({ loading: false });
+        return;
+      }
+
+      if (!res.ok) {
+        set({ loading: false });
+        return;
+      }
+
+      const data = await res.json();
+
+      set({
+        users: data,
+        loading: false,
+      });
+
+    } catch {
+      set({
+        loading: false,
+      });
     }
-
-    const data = await res.json();
-
-    set({
-      users: data,
-      loading: false,
-    });
   },
 
   clearUser: () => {

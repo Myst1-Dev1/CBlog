@@ -16,20 +16,31 @@ export const usePostStore = create<PostState>((set) => ({
     loading: false,
     error: null,
     fetchPostData: async () => {
-        const res = await fetch(`${API_URL}posts`, {
-            method: 'GET',
-            cache: 'no-store',
-        });
+        try {
+            const res = await fetch(`${API_URL}posts`, {
+                method: 'GET',
+                cache: 'no-store',
+            }).catch(() => null);
 
-        if (!res.ok) {
-            throw new Error('Erro ao buscar posts');
+            if (!res) {
+                set({ loading: false });
+                return;
+            }
+
+            if (!res.ok) {
+                set({ loading: false });
+                return;
+            }
+
+            const data = await res.json();
+
+            set({
+                post: data,
+                loading: false
+            });
+
+        } catch {
+            set({ loading: false });
         }
-
-        const data = await res.json();
-
-        set({
-            post: data,
-            loading: false
-        })
     }
 }))
