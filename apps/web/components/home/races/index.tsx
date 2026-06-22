@@ -169,15 +169,15 @@ export function Races() {
             <div className="race-dynamic lg:col-span-5">
               <div className="relative overflow-hidden rounded-[30px]">
                 <Image
-                  src={currentRace.image}
-                  alt={currentRace.name}
+                  src={currentRace?.image || '/images/corgi.webp'}
+                  alt={currentRace?.name || 'corgi'}
                   width={800}
                   height={800}
                   className="h-[420px] w-full object-cover transition-transform duration-500 hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
                 <div className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.3em] text-[#8E4F00] backdrop-blur dark:bg-stone-950/75 dark:text-amber-200">
-                  HP {currentRace.hp}
+                  HP {currentRace?.hp}
                 </div>
               </div>
             </div>
@@ -185,7 +185,7 @@ export function Races() {
             <div className="race-dynamic lg:col-span-7 space-y-6">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="rounded-full border border-[#E58E35]/15 bg-[#E58E35]/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.25em] text-[#8E4F00] dark:text-amber-200">
-                  {currentRace.type}
+                  {currentRace?.type}
                 </span>
                 <span className={`text-xs font-semibold uppercase tracking-[0.25em] text-stone-500`}>
                   perfil ativo
@@ -193,15 +193,15 @@ export function Races() {
               </div>
 
               <div className="space-y-2">
-                <h3 className="text-3xl font-black text-[#6f3c07] dark:text-white">{currentRace.name}</h3>
-                <p className="text-lg font-semibold text-[#E58E35]">{currentRace.tagline}</p>
+                <h3 className="text-3xl font-black text-[#6f3c07] dark:text-white">{currentRace?.name}</h3>
+                <p className="text-lg font-semibold text-[#E58E35]">{currentRace?.tagline}</p>
                 <p className={`max-w-2xl text-sm leading-relaxed text-stone-400`}>
-                  {currentRace.description}
+                  {currentRace?.description}
                 </p>
               </div>
 
               <div className="grid gap-3 sm:grid-cols-3">
-                {currentRace.stats.map((stat) => (
+                {currentRace?.stats.map((stat) => (
                   <div
                     key={stat.label}
                     className={`rounded-[24px] border p-4 text-center border-stone-800 bg-stone-900/80

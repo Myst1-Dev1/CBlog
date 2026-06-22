@@ -40,7 +40,7 @@ export function Posts({ data }: PostsProps) {
   };
 
   const featuredPost = recentPosts[0];
-  const morePosts = recentPosts.slice(1);
+  const morePosts = recentPosts.slice(1, 4);
 
   const authorIds = new Set(recentPosts?.map((post: any) => post.authorId));
   const authors = users?.filter((user) => authorIds.has(user.id));

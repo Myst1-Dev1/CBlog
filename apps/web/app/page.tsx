@@ -15,7 +15,7 @@ export default async function Home() {
       <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[520px] bg-[radial-gradient(circle_at_top,_rgba(245,158,11,0.16),_transparent_55%)]" />
       <div className="pointer-events-none absolute right-[-8%] top-[680px] z-0 h-[340px] w-[340px] rounded-full bg-amber-300/10 blur-3xl" />
       <div className="relative z-10">
-        <Intro />
+        <Intro data={data} />
         <History />
         <Races />
         <HealthFood />
