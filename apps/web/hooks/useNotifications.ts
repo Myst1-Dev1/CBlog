@@ -1,51 +1,3 @@
-// 'use client';
-
-// import { useEffect, useRef } from 'react';
-// import { toast } from 'react-toastify';
-// import { io, Socket } from 'socket.io-client';
-
-// type NotificationPayload = {
-//   type: 'COMMENT';
-//   message: string;
-//   metadata: {
-//     postId: number;
-//     commentId: number;
-//   };
-// };
-
-// export function useNotifications(userId?: number) {
-//   const socketRef = useRef<Socket | null>(null);
-
-//   useEffect(() => {
-//     if (!userId) return;
-
-//     if (socketRef.current) return;
-
-//     const socket = io('http://localhost:4016', {
-//       query: { userId },
-//     });
-
-//     socketRef.current = socket;
-
-//     socket.on('connect', () => {
-//       console.log('🔌 Socket conectado');
-//     });
-
-//     socket.on('notification', (data: NotificationPayload) => {
-//       toast.success(data.message);
-//     });
-
-//     socket.on('disconnect', () => {
-//       console.log('❌ Socket desconectado');
-//     });
-
-//     return () => {
-//       socket.disconnect();
-//       socketRef.current = null;
-//     };
-//   }, [userId]);
-// }
-
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -59,7 +11,6 @@ export type NotificationPayload = {
   message: string;
   read: boolean;
   createdAt: string;
-
   metadata: {
     postId: number;
     commentId: number;
@@ -70,38 +21,50 @@ export type NotificationPayload = {
 export function useNotifications(userId?: number) {
   const socketRef = useRef<Socket | null>(null);
 
-  const [notifications, setNotifications] = useState<
-    NotificationPayload[]
-  >([]);
-
-  console.log(userId);
+  const [notifications, setNotifications] = useState<NotificationPayload[]>([]);
 
   const fetchNotifications = async () => {
-      try {
-        const userCookie = Cookies.get('user');
+    if (!userId) return;
 
-        if (!userCookie) {
-          throw new Error('Usuário não autenticado');
-        }
+    try {
+      const userCookie = Cookies.get('user');
 
-        const token = JSON.parse(userCookie);
+      if (!userCookie) {
+        throw new Error('Usuário não autenticado');
+      }
 
-        const response = await fetch(
-          `https://lab.mystdev.com.br/api/cblog/notifications/${userId}`,
-          {
-        headers: {
-          Authorization: `Bearer ${token.token}`,
+      const { token } = JSON.parse(userCookie);
+
+      const response = await fetch(
+        `https://lab.mystdev.com.br/api/cblog/notifications/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      },
-    );
+      );
 
-    const data = await response.json();
+      if (!response.ok) {
+        console.error(
+          'Erro ao buscar notificações:',
+          response.status,
+          response.statusText,
+        );
 
-    setNotifications(data);
-  } catch (error) {
-    console.error(error);
-  }
-};
+        setNotifications([]);
+        return;
+      }
+
+      const data = await response.json();
+
+      console.log('📥 Notifications:', data);
+
+      setNotifications(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error('Erro ao buscar notificações:', err);
+      setNotifications([]);
+    }
+  };
 
   useEffect(() => {
     if (!userId) return;
@@ -109,30 +72,39 @@ export function useNotifications(userId?: number) {
     fetchNotifications();
 
     const socket = io('https://lab.mystdev.com.br', {
-      path: '/api/cblog/notifications/socket.io', // Ou o caminho exato que o Nginx repassa
+      path: '/api/cblog/notifications/socket.io',
       query: {
-        userId,
+        userId: String(userId),
       },
-      transports: ['websocket', 'polling'], // Força suportar websockets e polling
+      reconnection: true,
+      reconnectionAttempts: Infinity,
+      reconnectionDelay: 2000,
     });
 
     socketRef.current = socket;
 
     socket.on('connect', () => {
-      console.log('🔌 Socket conectado');
+      console.log('🟢 Socket conectado:', socket.id);
     });
 
-    socket.on('notification', (data: NotificationPayload) => {
-      toast.success(data.message);
-
-      setNotifications((prev) => [
-        data,
-        ...prev,
-      ]);
+    socket.on('connect_error', (err) => {
+      console.error('🔴 Socket connect_error:', err.message);
     });
 
-    socket.on('disconnect', () => {
-      console.log('❌ Socket desconectado');
+    socket.on('error', (err) => {
+      console.error('🔴 Socket error:', err);
+    });
+
+    socket.on('disconnect', (reason) => {
+      console.log('🔌 Socket desconectado:', reason);
+    });
+
+    socket.on('notification', (notification: NotificationPayload) => {
+      console.log('📨 Nova notificação:', notification);
+
+      toast.success(notification.message);
+
+      setNotifications((prev) => [notification, ...prev]);
     });
 
     return () => {
@@ -152,10 +124,7 @@ export function useNotifications(userId?: number) {
   };
 
   const markAllAsRead = async () => {
-    if (!userId) {
-      console.log('⚠️ userId é undefined');
-      return;
-    }
+    if (!userId) return;
 
     try {
       const userCookie = Cookies.get('user');
@@ -164,42 +133,32 @@ export function useNotifications(userId?: number) {
         throw new Error('Usuário não autenticado');
       }
 
-      const token = JSON.parse(userCookie);
-      console.log('📤 Enviando markAllAsRead para userId:', userId);
+      const { token } = JSON.parse(userCookie);
 
-      const response = await fetch(`https://lab.mystdev.com.br/api/cblog/notifications/read-all`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token.token}`,
+      const response = await fetch(
+        'https://lab.mystdev.com.br/api/cblog/notifications/read-all',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ userId }),
         },
-        body: JSON.stringify({ userId }),
-      });
+      );
 
       if (!response.ok) {
-        const errorData = await response.text();
-        console.error('❌ Erro na resposta:', response.status, errorData);
-        throw new Error(`Erro ${response.status}: ${errorData}`);
+        throw new Error(await response.text());
       }
 
-      const data = await response.json();
-      console.log('✅ markAllAsRead respondeu:', data);
-
-      // Refetch para pegar notificações atualizadas do servidor
-      console.log('🔄 Refetching notificações...');
       await fetchNotifications();
     } catch (err) {
-      console.error('❌ Erro ao marcar notificações como lidas:', err);
+      console.error(err);
     }
   };
 
-  // const unreadCount = notifications!.filter(
-  //   (notification) => !notification.read,
-  // ).length;
-
   return {
     notifications,
-    // unreadCount,
     markAsRead,
     markAllAsRead,
   };
