@@ -108,10 +108,12 @@ export function useNotifications(userId?: number) {
 
     fetchNotifications();
 
-    const socket = io('https://lab.mystdev.com.br/api/cblog/notifications', {
+    const socket = io('https://lab.mystdev.com.br', {
+      path: '/api/cblog/notifications/socket.io', // Ou o caminho exato que o Nginx repassa
       query: {
         userId,
       },
+      transports: ['websocket', 'polling'], // Força suportar websockets e polling
     });
 
     socketRef.current = socket;
