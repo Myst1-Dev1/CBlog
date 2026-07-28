@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import Cookies from 'js-cookie';
 
-const API_URL = 'http://localhost:4011/';
+const API_URL = 'https://lab.mystdev.com.br/api/cblog/';
 
 export type User = {
   id: number;

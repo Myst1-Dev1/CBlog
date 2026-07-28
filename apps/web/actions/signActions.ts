@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { ActionResult } from '../@types/ActionResult'
 import { cookies } from "next/headers";
 
-const API_URL = 'http://localhost:4011/'
+const API_URL = 'https://lab.mystdev.com.br/api/cblog/'
 
 export async function Login(_: ActionResult, formData: FormData): Promise<ActionResult> {
     const email = formData.get('email');

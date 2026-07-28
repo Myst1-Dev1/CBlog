@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { Post } from '../../@types/Post';
 
-const API_URL = 'http://localhost:4011/';
+const API_URL = 'https://lab.mystdev.com.br/api/cblog/';
 
 type PostState = {
     post: Post[] | null;

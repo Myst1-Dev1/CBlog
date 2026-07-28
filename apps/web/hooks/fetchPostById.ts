@@ -1,5 +1,5 @@
 export async function fetchPostById(id: number) {
-    const res = await fetch(`http://localhost:4011/posts/` + id, {
+    const res = await fetch(`https://lab.mystdev.com.br/api/cblog/posts/` + id, {
         cache: 'no-store',
     });
 

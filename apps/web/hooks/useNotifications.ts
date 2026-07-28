@@ -87,7 +87,7 @@ export function useNotifications(userId?: number) {
         const token = JSON.parse(userCookie);
 
         const response = await fetch(
-          `http://localhost:4011/notifications/${userId}`,
+          `https://lab.mystdev.com.br/api/cblog/notifications/${userId}`,
           {
         headers: {
           Authorization: `Bearer ${token.token}`,
@@ -108,7 +108,7 @@ export function useNotifications(userId?: number) {
 
     fetchNotifications();
 
-    const socket = io('http://localhost:4016', {
+    const socket = io('https://lab.mystdev.com.br/api/cblog/notifications', {
       query: {
         userId,
       },
@@ -165,7 +165,7 @@ export function useNotifications(userId?: number) {
       const token = JSON.parse(userCookie);
       console.log('📤 Enviando markAllAsRead para userId:', userId);
 
-      const response = await fetch(`http://localhost:4011/notifications/read-all`, {
+      const response = await fetch(`https://lab.mystdev.com.br/api/cblog/notifications/read-all`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

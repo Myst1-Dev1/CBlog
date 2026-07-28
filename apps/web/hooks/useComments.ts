@@ -23,7 +23,7 @@ export function useComments(authorId?: number) {
       setLoading(true);
 
       const response = await fetch(
-        `http://localhost:4011/comments/latest/${authorId}`,
+        `https://lab.mystdev.com.br/api/cblog/comments/latest/${authorId}`,
       );
 
       if (!response.ok) {

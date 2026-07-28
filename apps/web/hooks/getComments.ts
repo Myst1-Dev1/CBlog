@@ -2,7 +2,7 @@
 
 export async function getComments(id:number) {
     try {
-        const res = await fetch('http://localhost:4011/comments/' + id, {
+        const res = await fetch('https://lab.mystdev.com.br/api/cblog/comments/' + id, {
             method:'GET',
             next: { tags: [ 'comments' ] }
         })
