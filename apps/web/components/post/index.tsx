@@ -19,7 +19,7 @@ export function PostIntro({ title, category, postImageUrl }: PostIntroProps) {
                 />
                 <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.25),rgba(0,0,0,0.78))] dark:bg-[linear-gradient(180deg,rgba(0,0,0,0.28),rgba(7,6,5,0.92))]" />
 
-                <div className="relative z-10 flex min-h-[56vh] items-end">
+                <div className="px-0 lg:px-5 relative z-10 flex min-h-[56vh] items-end">
                     <div className="container w-full py-8 md:py-10">
                         <div className="max-w-3xl space-y-5 text-white">
                             <div className="flex flex-wrap items-center gap-3">
@@ -31,7 +31,7 @@ export function PostIntro({ title, category, postImageUrl }: PostIntroProps) {
                                 </span>
                             </div>
 
-                            <h1 className="max-w-2xl text-4xl font-black leading-[0.95] tracking-tight sm:text-5xl lg:text-7xl">
+                            <h1 className="w-full text-2xl lg:text-4xl font-black leading-[0.95] tracking-tight sm:text-5xl lg:text-7xl">
                                 {title}
                             </h1>
 

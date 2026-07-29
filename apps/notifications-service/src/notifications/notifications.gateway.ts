@@ -7,7 +7,11 @@ import {
 import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({
-  cors: { origin: '*' },
+  path: "/api/cblog/notifications/socket.io",
+  cors: {
+    origin: ['https://c-blog-web.vercel.app', 'http://localhost:3000'],
+    credentials: true,
+  }
 })
 export class NotificationsGateway
   implements OnGatewayConnection, OnGatewayDisconnect
