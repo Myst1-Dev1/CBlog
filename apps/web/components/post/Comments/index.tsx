@@ -97,7 +97,7 @@ export function Comments({ data, comments }: CommentsProps) {
                                 <textarea
                                     name="content"
                                     placeholder="Escreva algo sobre este post..."
-                                    className="min-h-36 w-full resize-none rounded-[24px] border border-[#E58E35]/15 bg-[var(--background)] p-4 text-sm text-[var(--foreground)] outline-none transition-all placeholder:text-[var(--text-muted)] focus:border-[#E58E35]/40 focus:ring-2 focus:ring-[#E58E35]/10 dark:border-stone-800 dark:bg-stone-950/80 dark:placeholder:text-stone-500"
+                                    className="min-h-36 w-full resize-none rounded-[24px] border border-[#E58E35]/15 bg-[var(--background)] p-4 text-sm text-gray-400 outline-none transition-all placeholder:text-[var(--text-muted)] focus:border-[#E58E35]/40 focus:ring-2 focus:ring-[#E58E35]/10 dark:border-stone-800 dark:bg-stone-950/80 dark:placeholder:text-stone-500"
                                 />
                             </div>
                         </div>
