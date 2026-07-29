@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState } from "react";
 
 import { FaArrowLeft, FaArrowRight, FaSearch } from "react-icons/fa";
 import { Post } from "../../@types/Post";
@@ -14,11 +14,13 @@ interface PostsContentProps {
 
 export function PostsContent({ data }: PostsContentProps) {
   const { users } = useUserStore();
-  
+
   const [search, setSearch] = useState("");
 
+  const posts = data ?? [];
+
   const filteredPosts = useMemo(() => {
-    return data.filter((post) => {
+    return posts.filter((post) => {
       const normalizedSearch = search.toLowerCase();
 
       return (
@@ -27,8 +29,8 @@ export function PostsContent({ data }: PostsContentProps) {
         post.category?.toLowerCase().includes(normalizedSearch)
       );
     });
-  }, [data, search]);
-  
+  }, [posts, search]);
+
   const {
     prevPage,
     nextPage,
@@ -42,7 +44,7 @@ export function PostsContent({ data }: PostsContentProps) {
     itemsPerPage: 6,
   });
 
-  const authorIds = new Set(data?.map((post: any) => post.authorId));
+  const authorIds = new Set(posts.map((post: any) => post.authorId));
   const authors = users?.filter((user) => authorIds.has(user.id));
 
   return (
@@ -61,7 +63,9 @@ export function PostsContent({ data }: PostsContentProps) {
                 Blog
               </h1>
               <p className="max-w-2xl text-base leading-relaxed text-[var(--text-muted)] sm:text-lg dark:text-stone-400">
-                Bem-vindos ao nosso cantinho aconchegante na internet. Aqui compartilhamos histórias, dicas de cuidados e aventuras do dia a dia com nossos companheiros favoritos.
+                Bem-vindos ao nosso cantinho aconchegante na internet. Aqui
+                compartilhamos histórias, dicas de cuidados e aventuras do dia a
+                dia com nossos companheiros favoritos.
               </p>
             </div>
           </div>
@@ -111,9 +115,7 @@ export function PostsContent({ data }: PostsContentProps) {
           {paginatedItems.map((post) => {
             const author = authors?.find((item) => item.id === post.authorId);
 
-            return (
-              <PostCard key={post.id} post={post} author={author} />
-            );
+            return <PostCard key={post.id} post={post} author={author} />;
           })}
         </div>
 
